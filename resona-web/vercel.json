@@ -1,0 +1,13 @@
+{
+  "functions": {
+    "api/stt.js": {
+      "maxDuration": 30
+    },
+    "api/story.js": {
+      "maxDuration": 60
+    },
+    "api/tts.js": {
+      "maxDuration": 30
+    }
+  }
+}

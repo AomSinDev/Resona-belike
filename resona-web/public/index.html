@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="th"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Resona – เกมท่องเที่ยวฝึกพูด</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;600;700;800&display=swap"><style>
+:root{--bg:#e3f7ff;--card:#fff;--ink:#12304a;--pri:#2389a8;--acc:#ffa800;--ok:#1b9e5a;--bad:#d9534f;--mut:#5b7a90;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0e222c;--card:#16323f;--ink:#e6f4fa;--pri:#4cb4d2;--mut:#9ab8c8;color-scheme:dark}}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Sarabun","Noto Sans Thai",system-ui,sans-serif;font-size:20px;line-height:1.5}small{font-size:.85em}
+header{background:var(--pri);color:#fff;padding:12px 16px;display:flex;justify-content:space-between;align-items:center;border-radius:0 0 24px 24px}
+.logo{background:#fff;color:var(--pri);font-weight:800;font-size:24px;padding:4px 16px;border-radius:16px}.hi{background:#fff;color:var(--ink);font-size:16px;white-space:nowrap;padding:4px 12px;border-radius:14px}
+main{max-width:520px;margin:0 auto;padding:16px 16px 130px}
+.card{background:var(--card);border:2px solid var(--pri);border-radius:26px;padding:16px;margin-bottom:14px;box-shadow:0 5px 0 rgba(35,137,168,.25)}
+.row{display:flex;gap:10px;align-items:center;justify-content:space-between}
+h2{margin:0;font-size:25px}.mut{color:var(--mut);font-size:17px}
+button{font:inherit;font-weight:700;border:0;border-radius:14px;padding:14px 24px;min-height:52px;background:var(--pri);color:#fff;cursor:pointer}
+button.alt{background:transparent;color:var(--pri);border:2px solid var(--pri)}button:disabled{opacity:.5}button{border-radius:999px;box-shadow:0 4px 0 rgba(0,0,0,.18);transition:transform .1s}button:active{transform:translateY(3px);box-shadow:none}.bounce{animation:bn 1.6s ease-in-out infinite}@keyframes bn{50%{transform:translateY(-5px)}}
+.shop{padding:0;overflow:hidden}.awn{height:34px;background:repeating-linear-gradient(90deg,var(--acc) 0 12.5%,var(--pri) 12.5% 25%)}.shop .in{padding:12px 16px;display:flex;justify-content:space-between;align-items:center}
+nav{position:fixed;left:12px;right:12px;bottom:calc(10px + env(safe-area-inset-bottom,0px));max-width:496px;margin:auto;background:var(--card);border:2px solid var(--pri);border-radius:24px;display:flex;padding:6px}
+nav button{flex:1;background:transparent;color:var(--pri);font-size:16px;padding:10px 0;min-height:56px}nav button.on{background:var(--pri);color:#fff}
+canvas{width:100%;image-rendering:pixelated;border:3px solid var(--pri);border-radius:14px;display:block}
+#say{font-size:22px;line-height:1.6;cursor:pointer}.sb{border-radius:6px;padding:0 2px;transition:background .5s,color .5s}.sb.now{background:#fff1b8;color:#12304a;box-shadow:0 0 0 2px #fff1b8}
+.say{background:var(--card);border:2px solid var(--ink);border-radius:20px 20px 4px 20px;padding:10px 14px;margin-top:10px}
+.par:before{content:"";display:block}.par{background:#fff6dc;border-radius:20px 20px 20px 4px;color:#12304a;border:2px solid var(--acc);border-radius:14px;padding:8px 12px;margin-top:8px;min-height:44px}
+.big{font-size:42px;font-weight:800;text-align:center;color:var(--pri);padding:6px 0}
+.bar{height:30px;border-radius:15px;border:2px solid var(--pri);overflow:hidden;background:var(--bg);position:relative}.bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,#7fd6a0,#ffd24a,#ff7a5a)}.bar b{position:absolute;left:55%;top:0;bottom:0;border-left:3px dashed #d9534f}.star{font-size:40px}
+.cen{text-align:center}.wrap{overflow-x:auto}table{width:100%;border-collapse:collapse;font-size:15px}td,th{padding:6px 4px;border-bottom:1px solid var(--bg);text-align:center}.up{color:var(--ok);font-weight:700}.down{color:var(--bad);font-weight:700}
+#pop{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:#0006;z-index:20}#pop.on{display:flex}#pop .bx{background:var(--card);border:3px solid var(--acc);border-radius:28px;padding:14px 22px 18px;text-align:center;max-width:300px;box-shadow:0 8px 0 rgba(0,0,0,.2);animation:pp .55s cubic-bezier(.34,1.8,.5,1)}@keyframes pp{0%{transform:scale(.2) translateY(90px);opacity:0}100%{transform:none;opacity:1}}#pop canvas{width:160px;height:160px;border:0;border-radius:0;margin:auto;animation:bn 1.6s ease-in-out infinite}#pm{font-weight:700;font-size:22px}
+@keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}.card{animation:rise .45s ease-out both}
+.hero{display:flex;align-items:center;gap:10px;padding:10px 14px}.hero canvas{width:140px;height:112px;flex:none;border:0;border-radius:0}.hero .msg{font-size:20px;line-height:1.45}
+.game{display:flex;gap:12px;align-items:center;padding:10px}.game .th{width:132px;flex:none;border-width:2px;border-radius:12px}.game .gi{flex:1;min-width:0}.game .gi button{margin-top:6px;width:100%}
+.pts{background:#fff4d6;color:#8a5a00;border-radius:14px;padding:2px 10px;font-weight:800;white-space:nowrap;display:inline-block}.bump{animation:bump .5s ease}@keyframes bump{40%{transform:scale(1.3)}}
+.fly{position:fixed;z-index:40;font-size:34px;margin:-17px 0 0 -17px;transition:transform .8s cubic-bezier(.5,0,.3,1),opacity .8s;pointer-events:none}
+#task{position:relative}.meter{margin-bottom:10px}.meter .lab{font-size:17px;color:var(--mut);margin-bottom:2px}
+.bar{height:38px;border-radius:19px}.bar span{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:18px;color:#12304a;text-shadow:0 1px 0 #fff}.bar i{transition:background .3s}
+.mic{width:128px;height:128px;border-radius:50%;padding:0;font-size:56px;background:#e8403a;margin:6px auto 4px;display:block;animation:ring 1.8s ease-out infinite;box-shadow:0 6px 0 #a82a26}
+@keyframes ring{0%{box-shadow:0 6px 0 #a82a26,0 0 0 0 rgba(232,64,58,.45)}100%{box-shadow:0 6px 0 #a82a26,0 0 0 24px rgba(232,64,58,0)}}
+.recd{width:110px;height:110px;border-radius:50%;margin:6px auto;display:flex;align-items:center;justify-content:center;font-size:52px;background:#ffe3e1;animation:ring 1.2s ease-out infinite}
+.cd{position:absolute;inset:0;display:none;flex-direction:column;align-items:center;justify-content:center;background:var(--card);opacity:.96;border-radius:24px;z-index:5;color:var(--pri)}.cd.on{display:flex}.cd b{font-size:120px;line-height:1;animation:cdp .8s ease-out}.cd small{font-size:22px;color:var(--ink)}
+@keyframes cdp{0%{transform:scale(1.6);opacity:0}35%{opacity:1}100%{transform:scale(1)}}
+.hb{background:var(--bg);color:var(--pri);min-height:40px;padding:4px 12px;font-size:16px;box-shadow:none;margin-top:6px}@media (prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition:none!important}}</style></head><body>
+<header><span class="logo">🦜 Resona</span><span class="hi">สวัสดีครับ คุณทินภัทร</span></header>
+<main id="app"></main><div id="pop" onclick="this.classList.remove('on')"><div class="bx"><canvas id="pc" width="80" height="80"></canvas><div id="pm"></div></div></div>
+<nav><button id="t0" onclick="tab(0)">🏠 หน้าหลัก</button><button id="t1" onclick="tab(1)">📊 สถานะ</button><button id="t2" onclick="tab(2)">👤 โปรไฟล์</button></nav>
+<script>
+const $=s=>document.querySelector(s),app=$('#app');
+const LK='resona_log_v2',PK='resona_pts_v2';
+const rd=(k,d)=>{try{return JSON.parse(localStorage.getItem(k))??d}catch(e){return d}},wr=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}};
+const MODES={vowel:{n:'เกมลากเสียง',d:'ลากเสียงคำให้ยาวที่สุด',u:'วินาที'},sentence:{n:'เกมอ่านประโยค',d:'อ่านประโยคแล้วพูด',u:'%'},word:{n:'เกมอ่านคำ',d:'อ่านคำแล้วพูด',u:'%'}};
+const SC=['market','beach','mountain','temple'];
+const SPOTS={market:['ท่าเรือ','แผงผลไม้','ศาลาริมน้ำ'],beach:['ริมหาด','ร้านน้ำมะพร้าว','จุดชมพระอาทิตย์ตก'],mountain:['ลานจอดรถ','น้ำตก','ยอดดอย'],temple:['ประตูวัด','ลานเจดีย์','ศาลาไหว้พระ']};
+const ACT={market:['ทักทายคนพายเรือ','สั่งผลไม้จากแม่ค้า','นั่งพักริมน้ำ'],beach:['ทักทายคนริมหาด','สั่งน้ำมะพร้าว','ชมพระอาทิตย์ตก'],mountain:['ทักทายคนขับรถ','ตะโกนสู้เสียงน้ำตก','ชูธงบนยอดดอย'],temple:['ทักทายลุงยามหน้าวัด','ถามทางพระภิกษุ','กล่าวคำอธิษฐานหน้าพระ']};
+const FB=[
+{scene:'market',place:'ตลาดน้ำอัมพวา',guide:'พี่ต้น',spots:['ท่าเรือ','ตลาดผลไม้','ศาลาริมน้ำ'],intro:'ยินดีต้อนรับสู่ตลาดน้ำ! วันนี้พี่จะพาไปซื้อผลไม้อร่อย ๆ กัน',beats:['เรือพ่อค้าลอยมาเต็มลำ กลิ่นผลไม้หอมมาก ลองทักทายคนพายเรือดูนะ','แม่ค้ายิ้มให้เราแล้ว ลองสั่งผลไม้กันเถอะ','เหนื่อยแล้วมานั่งพักริมน้ำ ชมวิวสวย ๆ กัน'],ending:'เรามีผลไม้เต็มมือ ทริปตลาดน้ำสนุกมาก!',words:['เรือ','ผลไม้','ศาลา'],sentences:['สวัสดี ขอขึ้นเรือได้ไหม','ขอมะม่วงสุกหน่อย','นั่งพักริมน้ำสบายจัง']},
+{scene:'beach',place:'หาดป่าตอง ภูเก็ต',guide:'พี่ฟ้า',spots:['ริมหาด','ร้านน้ำมะพร้าว','จุดชมพระอาทิตย์ตก'],intro:'ลมทะเลเย็นสบายจัง! มาเดินเล่นริมหาดด้วยกันนะ',beats:['คลื่นซัดฝั่งเบา ๆ ลองทักทายคนริมหาดดัง ๆ ดูสิ','คอแห้งแล้ว ไปสั่งน้ำมะพร้าวกัน','ท้องฟ้าเริ่มเป็นสีส้ม สวยที่สุดเลย'],ending:'พระอาทิตย์ตกสวยมาก ขอบคุณที่มาเที่ยวด้วยกันนะ!',words:['หาด','มะพร้าว','ตะวัน'],sentences:['สวัสดี ลมทะเลเย็นดี','ขอน้ำมะพร้าวหนึ่งลูก','พระอาทิตย์ตกสวยมาก']},
+{scene:'mountain',place:'ดอยอินทนนท์',guide:'พี่ภู',spots:['ลานจอดรถ','น้ำตกวชิรธาร','ยอดดอย'],intro:'อากาศเย็นสบายจัง! วันนี้เราจะขึ้นยอดดอยที่สูงที่สุดในประเทศไทย',beats:['ทางขึ้นเต็มไปด้วยต้นสนและหมอก ลองทักทายคนขับรถดัง ๆ ดูนะ','เสียงน้ำตกดังมาก เราต้องพูดดัง ๆ ถึงจะได้ยิน','ถึงยอดแล้ว! ลองชูธงแล้วตะโกนดัง ๆ เลย'],ending:'เรามาถึงยอดดอยแล้ว วิวสวยที่สุดเลย!',words:['ดอย','น้ำตก','ธง'],sentences:['สวัสดี ไปยอดดอยกันเถอะ','เสียงน้ำตกดังมาก','เรามาถึงยอดดอยแล้ว']},
+{scene:'temple',place:'วัดพระศรีสรรเพชญ์ อยุธยา',guide:'พี่แก้ว',spots:['ประตูวัด','ลานเจดีย์','ศาลาไหว้พระ'],intro:'ยินดีต้อนรับสู่อยุธยา เมืองเก่าอายุหลายร้อยปี!',beats:['เจดีย์สีทองตั้งเรียงรายสวยมาก ลองทักทายคุณลุงยามหน้าวัดนะ','ลานนี้กว้างมาก ลองถามทางไปไหว้พระกัน','ถึงแล้ว ตั้งใจพูดคำอธิษฐานให้ดัง ๆ และชัด ๆ นะ'],ending:'ทริปอยุธยาอิ่มบุญมาก ขอบคุณที่มาด้วยกันนะ!',words:['วัด','เจดีย์','ธูป'],sentences:['สวัสดี ขอเข้าไปในวัดได้ไหม','ขอถามทางไปไหว้พระหน่อย','ขอให้ทุกคนมีความสุข']}];
+const VOW=[['อา',2],['อี',3],['อู',4]];
+const CHEER=['เก่งมาก! 🎉','สุดยอดเลย!','ภูมิใจจังเลย!','เยี่ยมไปเลย!'],TRY=['ไม่เป็นไร ลองใหม่นะ!','สู้ ๆ นะ เกือบแล้ว!','หายใจลึก ๆ แล้วลองอีกที','เราทำได้อยู่แล้ว!'];
+const pick=a=>a[Math.floor(Math.random()*a.length)];
+// ---- เสียงพากย์ไกด์ (TTS ของเบราว์เซอร์) อ่านเฉพาะเนื้อเรื่อง; hush() ทุกครั้งก่อนเริ่มอัด เพราะปิด echoCancellation ไว้ ไมค์จะได้ยินเสียงเครื่อง
+const TK='resona_tts',TTS=window.speechSynthesis;TTS&&TTS.getVoices();// เรียกครั้งแรกให้ Chrome เริ่มโหลดรายชื่อเสียง
+const thVoice=()=>{const v=(TTS?TTS.getVoices():[]).filter(x=>/^th/i.test(x.lang));return v.find(x=>/natural|online|neural|google/i.test(x.name))||v[0]||null};
+// เสียงนกจากเซิร์ฟเวอร์ (Gemini TTS ผ่าน /api/tts): เสียงชัดและต่อเนื่องเหมือนคนพูด, ขอทีละตอนทั้งก้อน (ประหยัดโควตา) แล้วเลื่อนซับตามเวลาเสียง
+// ไม่มีคีย์ / เรียกไม่สำเร็จ / เล่นไม่ได้ → กลับไปใช้เสียงของเบราว์เซอร์ · AUC แคชเสียงตามข้อความ (กดฟังซ้ำไม่ต้องโหลดใหม่)
+let AU=null,TTSV=null;const AUC=new Map();
+fetch('/api/tts').then(r=>r.ok?r.json():null).then(j=>{TTSV=j&&j.ok?j.voice||'Gemini':null}).catch(()=>{});
+function hush(){try{TTS&&TTS.cancel()}catch(e){}if(AU){AU.pause();AU=null}}
+// แบ่งเนื้อเรื่องเป็นท่อนละประโยค ใช้ทั้งเสียงพากย์และซับไตเติล: ตัดตรงจบประโยค (! ? . … หรือขึ้นบรรทัดใหม่) ตัดกลางประโยคเฉพาะเมื่อยาวเกิน 90 ตัว
+// (เสียงออนไลน์ของ Chrome ตัดเสียงเมื่อท่อนยาวเกิน ~15 วิ) · "ๆ" ติดคำหน้าเสมอ ไม่งั้นเสียงพากย์อ่าน "ๆ" เดี่ยว ๆ ไม่ต่อกับคำก่อนหน้า · ท่อนสั้นมากต่อท้ายท่อนก่อน
+const chunks=tx=>{const ps=[];let cur='';const push=()=>{if(cur)ps.push(cur);cur=''};
+ for(const para of String(tx||'').replace(/\p{Extended_Pictographic}️?/gu,'').split('\n')){
+  for(const w of para.replace(/\s+ๆ/g,' ๆ').split(/[^\S ]+/).filter(Boolean)){if(cur&&(cur+' '+w).length>90)push();cur=cur?cur+' '+w:w;if(/[!?.…]$/.test(w)&&cur.length>=20)push()}
+  push()}
+ return ps.reduce((a,c)=>{if(a.length&&c.length<12&&(a[a.length-1]+' '+c).length<=110)a[a.length-1]+=' '+c;else a.push(c);return a},[])};
+console.assert((c=>c.length==3&&c[1]=='วันนี้ไปซื้อผลไม้อร่อย ๆ กัน'&&!c.some(x=>/^ๆ/.test(x)))(chunks('ยินดีต้อนรับสู่ตลาดน้ำ! 🎉 วันนี้ไปซื้อผลไม้อร่อย ๆ กัน\nเรือลอยมาเต็มลำ')),'chunks self-check failed');
+// ผู้เล่าเรื่อง: ท่อนถัดไปเริ่มตอนเสียงพากย์ท่อนนั้นเริ่มพูด (onstart); ไม่มีเสียง / เสียงไม่เริ่มใน 2.5 วิ / สัญญาณหาย → ใช้ตัวจับเวลาแทน
+function narrate(g,tx){hush();const ch=chunks(tx),N=g.nr={ch,i:0,t:clk(),done:0,tts:0,heard:0,end:0,h:'',est:ch.map(c=>600+100*c.length)};
+ if(!rd(TK,1)||!ch.length)return;if(TTSV){N.tts=N.srv=1;srvSpeak(g,N)}else bSpeak(g,N)}
+function bSpeak(g,N){try{const v=thVoice();if(!v){N.tts=0;return}N.tts=1;N.t=clk();N.heard=0;N.ch.forEach((c,k)=>{const u=new SpeechSynthesisUtterance(c.replace(/ ๆ/g,'ๆ'));u.voice=v;u.lang=v.lang;u.rate=.85;
+  u.onstart=()=>{if(g.nr!==N||N.done)return;if(k>N.i||!N.heard){N.i=k;N.t=clk()}N.heard=1};if(k==N.ch.length-1)u.onend=()=>{if(g.nr===N)N.end=1};TTS.speak(u)})}catch(e){N.tts=0}}// เสียงพากย์พังต้องไม่ทำให้เกมค้าง
+const ttsText=tx=>chunks(tx).join(' ').replace(/\s*ๆ/g,'ๆ');/* ข้อความที่ส่งให้ Gemini (ต้องตรงกันทั้งตอนโหลดล่วงหน้าและตอนเล่น) */
+function getTTS(text){if(!AUC.has(text)){const p=fetch('/api/tts',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({text}),signal:AbortSignal.timeout(30000)}).then(r=>{if(!r.ok)throw 0;return r.blob()}).then(b=>{const u=URL.createObjectURL(b);AUC.set(text,u);return u});AUC.set(text,p);p.catch(()=>AUC.delete(text))}return Promise.resolve(AUC.get(text))}
+/* Gemini ใช้เวลา ~5-8 วิต่อตอน → เริ่มทริปแล้วโหลดเสียงทั้ง 3 ตอนล่วงหน้าทีละตอน (ไม่ยิงพร้อมกัน กันติดโควตาต่อนาที) */
+function preTTS(S){if(!TTSV||!rd(TK,1))return;let p=Promise.resolve();[0,1,2].forEach(l=>{const t=ttsText((l==0?S.intro+'\n':'')+S.beats[l]);p=p.then(()=>getTTS(t)).catch(()=>{})})}
+async function srvSpeak(g,N){const text=N.ch.join(' ').replace(/\s*ๆ/g,'ๆ'),live=()=>g.nr===N&&!N.done&&N.tts,back=()=>{if(live()){N.srv=0;bSpeak(g,N)}};let url;
+ try{url=await getTTS(text)}catch(e){return back()}
+ if(!live())return;const a=AU=new Audio(url),L=N.ch.map(c=>c.length),T=L.reduce((x,y)=>x+y,0);
+ a.onloadedmetadata=()=>{const d=a.duration*1000;if(isFinite(d)&&d>0){let s=0;N.st=L.map(l=>{const v=d*s/T;s+=l;return v});N.est=L.map(l=>d*l/T)}};/* ท่อนที่ยาวกว่ากินเวลาเสียงมากกว่า */
+ a.onplaying=()=>{if(live()){N.a=a;N.heard=1}};a.onended=()=>{if(g.nr===N)N.end=1};a.play().catch(back)}
+function nrTick(g){const N=g.nr,A=g.an;if(!N||N.done||!A||!g.s)return;const now=clk();if(!N.ch.length)return nrEnd(g);
+ if(N.srv&&N.a&&N.st){const ms=N.a.currentTime*1000;let i=0;while(i<N.st.length-1&&ms>=N.st[i+1])i++;N.i=i;N.t=now-(ms-N.st[i])}// เสียงจากเซิร์ฟเวอร์: ท่อนปัจจุบันตามเวลาเสียง
+ if(N.tts&&(!N.heard&&now-N.t>(N.srv?15000:2500)||N.heard&&now-N.t>N.est[N.i]*2+2000)){N.tts=0;N.t=now;hush()}// เสียงไม่มา/ค้าง → ตัวจับเวลา (เสียงเซิร์ฟเวอร์ให้เวลาโหลดนานกว่า)
+ if(N.tts?N.end:now-N.t>=N.est[N.i]){if(!N.tts&&N.i<N.ch.length-1){N.i++;N.t=now}else return nrEnd(g)}
+ const el=N.tts&&!N.heard?0:now-N.t,c=CUT[g.s.scene+g.lvl],f=(N.i+Math.min(1,el/N.est[N.i]))/N.ch.length;
+ while(A.step<c.steps.length&&f>=A.step/c.steps.length){cue(A,c.steps[A.step]);A.step++}// ท่าในฉากเกิดตามความคืบหน้าของการเล่า
+ subs(g)}
+// ซับไตเติล: ท่อนที่ผ่านแล้วแสดงปกติ, ท่อนที่กำลังพากย์ไฮไลต์และพิมพ์ตามเสียง, ท่อนที่ยังไม่ถึงยังไม่แสดง
+function subs(g,all){const e=$('#sub'),N=g.nr;if(!e||!N)return;const el=N.tts&&!N.heard?0:clk()-N.t;
+ const h=N.ch.map((c,k)=>all||k<N.i?`<span class="sb">${esc(c)}</span>`:k==N.i?`<span class="sb now">${esc(c.slice(0,Math.ceil(c.length*Math.min(1,el/(N.est[k]*.85)))))}</span>`:'').join(' ');
+ const w=N.srv&&N.tts&&!N.heard&&!all?'<span class="mut">กำลังเตรียมเสียง…</span>':'';/* รอเสียงจากเซิร์ฟเวอร์ตอนแรก ~5-8 วิ ไม่ให้ดูเหมือนค้าง */
+ if(N.h!==h+w){N.h=h+w;e.innerHTML=h+w}}
+// จบการเล่า (หรือแตะข้าม): เล่นท่าที่เหลือให้ครบ แล้วถอยกล้องออกให้เห็นทั้งฉาก ลูกศรชี้เป้าภารกิจ และกล่องคำพูดขึ้น
+function nrEnd(g,quick){const N=g.nr,A=g.an;if(!N||N.done||!A)return;N.done=1;const c=CUT[g.s.scene+g.lvl];
+ while(A.step<c.steps.length){cue(A,c.steps[A.step],quick?500:2000);A.step++}
+ const fin=()=>{if(G===g&&g.an===A){cue(A,{cam:null,arrow:c.aim},quick?900:2200);tw(A,'bb',1,500);sfx('pop')}};if(quick)fin();else setTimeout(fin,1200);
+ subs(g,1);const b=$('#nx');if(b)b.disabled=false}
+// ---- เสียงประกอบสังเคราะห์ (ไม่ใช้ไฟล์) เบาและนุ่ม; ห้ามเล่นระหว่างอัดเสียง (busy) เพราะไมค์ไม่ได้ตัดเสียงสะท้อน ----
+const XK='resona_sfx';let AX=null;
+function sfx(n){if(busy||!rd(XK,1))return;try{AX=AX||new (window.AudioContext||window.webkitAudioContext)();if(AX.state=='suspended')AX.resume();const t0=AX.currentTime+.01,
+ N=(f,at,dur,type,vol,to)=>{const o=AX.createOscillator(),g=AX.createGain();o.type=type||'sine';o.frequency.setValueAtTime(f,t0+at);if(to)o.frequency.exponentialRampToValueAtTime(to,t0+at+dur);g.gain.setValueAtTime(0,t0+at);g.gain.linearRampToValueAtTime(vol||.05,t0+at+.015);g.gain.exponentialRampToValueAtTime(.0004,t0+at+dur);o.connect(g);g.connect(AX.destination);o.start(t0+at);o.stop(t0+at+dur+.05)},
+ S={tap:()=>N(620,0,.07,'triangle',.035),step:()=>N(190,0,.06,'triangle',.022),tick:()=>N(880,0,.12,'sine',.05),go:()=>N(1175,0,.22,'sine',.05),pop:()=>N(480,0,.14,'sine',.045,880),
+  chime:()=>{N(784,0,.7,'sine',.03);N(1175,.06,.7,'sine',.018)},star:()=>N(1320,0,.16,'triangle',.03,1760),pass:()=>[523,659,784,1047].forEach((f,i)=>N(f,i*.11,.38,'triangle',.045)),
+  fail:()=>{N(440,0,.28,'sine',.04);N(349,.2,.4,'sine',.035)},win:()=>[523,659,784,659,784,1047].forEach((f,i)=>N(f,i*.14,.45,'triangle',.045))};S[n]&&S[n]()}catch(e){}}
+const sxLabel=()=>rd(XK,1)?'🔔 เสียง: เปิด':'🔕 เสียง: ปิด';
+function sfxToggle(){wr(XK,rd(XK,1)?0:1);document.querySelectorAll('.sxb').forEach(b=>b.textContent=sxLabel());sfx('tap')}
+document.addEventListener('click',e=>{const b=e.target.closest&&e.target.closest('button');if(b&&!b.classList.contains('mic'))sfx('tap')},true);
+// ตัวเลขนับขึ้น + เด้ง และดาวบินเข้าแต้ม (ใช้ setTimeout ไม่ใช่ rAF จะได้ทำงานแม้แท็บถูกซ่อน)
+function countUp(e,a,b){if(!e)return;const t0=performance.now(),st=()=>{const p=Math.min(1,(performance.now()-t0)/700);e.textContent=Math.round(a+(b-a)*ease(p));if(p<1)setTimeout(st,40);else{const c=e.closest('.pts')||e;c.classList.remove('bump');void c.offsetWidth;c.classList.add('bump')}};st()}
+function flyStars(n,a,b){const cv=$('#cv'),tg=$('#pts');if(!cv||!tg)return countUp(tg&&tg.querySelector('b'),a,b);const A=cv.getBoundingClientRect(),T=tg.getBoundingClientRect();
+ for(let i=0;i<n;i++){const s=document.createElement('div'),x=A.left+A.width*(.42+.08*i),y=A.top+A.height*.45;s.className='fly';s.textContent='⭐';s.style.left=x+'px';s.style.top=y+'px';document.body.appendChild(s);
+  setTimeout(()=>{s.style.transform=`translate(${T.left+T.width/2-x}px,${T.top+T.height/2-y}px) scale(.6)`;s.style.opacity='.3'},80+i*180);
+  setTimeout(()=>{s.remove();sfx('star');if(i==n-1)countUp(tg.querySelector('b'),a,b)},980+i*180)}}
+function replay(){if(!G||!G.s||busy)return;G.an=initAnim(G.s.scene,G.lvl);story()}// ดูและฟังเนื้อเรื่องตอนนี้อีกครั้งตั้งแต่ต้น
+function ttsBtns(){const v=TTSV||thVoice();return`<div class="row" style="justify-content:center;flex-wrap:wrap;margin-top:8px"><button class="alt" onclick="replay()">🔁 ดูและฟังอีกครั้ง</button>${v?`<button class="alt" id="tt" onclick="ttsToggle()">${rd(TK,1)?'🔇 ปิดเสียงพากย์':'🔈 เปิดเสียงพากย์'}</button>`:''}</div>${v?'':'<small class="mut">เครื่องนี้ไม่มีเสียงอ่านภาษาไทย จึงไม่มีเสียงพากย์</small>'}`}
+function ttsToggle(){const on=!rd(TK,1);wr(TK,on?1:0);const b=$('#tt');if(b)b.textContent=on?'🔇 ปิดเสียงพากย์':'🔈 เปิดเสียงพากย์';const N=G&&G.nr;
+ if(!on){hush();if(N&&!N.done){N.tts=0;N.t=clk()}}else if(N&&!N.done)replay()}
+// ความตรงของคำ = Levenshtein ระดับตัวอักษร; ตัดช่องว่าง/เครื่องหมาย และคำลงท้ายสุภาพ เพราะผู้ป่วยมักเติม ครับ/ค่ะ
+const nrm=s=>String(s||'').replace(/[^฀-๿a-z0-9]/gi,'').replace(/(ครับ|ค่ะ|คะ|จ้ะ|จ้า|ฮะ)+$/,'');
+function sim(a,b){a=nrm(a);b=nrm(b);if(!a||!b)return 0;let p=Array.from({length:b.length+1},(_,j)=>j);for(let i=1;i<=a.length;i++){const q=[i];for(let j=1;j<=b.length;j++)q[j]=Math.min(p[j]+1,q[j-1]+1,p[j-1]+(a[i-1]==b[j-1]?0:1));p=q}return Math.round(100*(1-p[b.length]/Math.max(a.length,b.length)))}
+const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+console.assert(sim('ขอผลไม้ ถุง','ขอผลไม้ถุงครับ')==100&&sim('เรือ','ปลา')<50,'Resona self-check failed');
+let view=0,G=null,walk=0,cheer=0,sad=0,off=0,raf=0,busy=false,stopReq=0,popT=0;
+function tab(v){view=v;G=null;stopReq=1;hush();cancelAnimationFrame(raf);[0,1,2].forEach(i=>$('#t'+i).className=i==v?'on':'');[home,stats,prof][v]()}
+// หน้าแรก: นกแก้วทักทาย, การ์ดเกมมีภาพฉากจริง, แต้มนับขึ้นจากค่าที่เห็นครั้งก่อน
+let shownPts=0;const MODE_SCENE={vowel:['mountain',1],sentence:['market',1],word:['beach',1]};
+function home(){const P=rd(PK,0);
+ app.innerHTML=`<div class="card hero"><canvas id="hc" width="120" height="96"></canvas><div class="msg"><b>สวัสดีครับ!</b><br>วันนี้ไปเที่ยวไหนดีครับ<br><button class="hb sxb" onclick="sfxToggle()">${sxLabel()}</button></div></div>`+
+ `<div class="card shop"><div class="awn"></div><div class="in"><div><h2>ร้านค้าสะสมแต้ม</h2><div class="mut" style="color:var(--pri);font-size:20px">แต้มสะสม <span class="pts">⭐ <b id="hp">${shownPts}</b></span></div></div><span style="font-size:48px">🎁</span></div></div>`+
+ Object.entries(MODES).map(([k,m],i)=>`<div class="card game" style="animation-delay:${.08+i*.08}s"><canvas class="th" data-k="${k}" width="240" height="135"></canvas><div class="gi"><h2>${m.n}</h2><div class="mut">${m.d}</div><button onclick="start('${k}')">▶ เล่น</button></div></div>`).join('');
+ countUp($('#hp'),shownPts,P);shownPts=P;
+ document.querySelectorAll('.th').forEach(c=>{const [sc,l]=MODE_SCENE[c.dataset.k],A=initAnim(sc,l);CUT[sc+l].steps.forEach(s=>Object.assign(A,s.set));A.live=1;A.look=0;paint(1000,sc,l,A,{noParrot:1});c.getContext('2d').drawImage(FR,0,0)});
+ homeLoop()}
+function homeLoop(){cancelAnimationFrame(raf);const c=$('#hc');if(!c)return;const g=c.getContext('2d'),f=mkc(120,96),s=mkc(120,96),fx=f.getContext('2d'),sx=s.getContext('2d'),[R]=pen(fx);
+ const fr=n=>{if(!$('#hc')||view!==0||G)return;const cyc=n%5000,flap=cyc<1800&&Math.sin(n/180)>0;// โบกปีกทักทายเป็นช่วง ๆ ทุก 5 วิ แล้วพูด
+  fx.clearRect(0,0,120,96);parrot(R,null,20,8+Math.round((Math.sin(n/650)+1)*.5),'idle',{blink:n%3800<140,flap,talk:cyc>1800&&cyc<3000&&Math.floor(n/130)%2==0});
+  sx.globalCompositeOperation='copy';sx.drawImage(f,0,0);sx.globalCompositeOperation='source-in';sx.fillStyle=OUT;sx.fillRect(0,0,120,96);sx.globalCompositeOperation='source-over';
+  g.clearRect(0,0,120,96);g.fillStyle='#9fdca8';g.beginPath();g.ellipse(60,91,44,5,0,0,7);g.fill();for(let dx=-2;dx<=2;dx++)for(let dy=-2;dy<=2;dy++)if((dx||dy)&&Math.abs(dx)+Math.abs(dy)<4)g.drawImage(s,dx,dy);g.drawImage(f,0,0);
+  raf=requestAnimationFrame(fr)};raf=requestAnimationFrame(fr)}
+/* คำชวนตอนท้ายเนื้อเรื่องสำรอง (โหมดลากเสียง/อ่านคำ) พร้อมเหตุผลจากฉาก · ที่วัดไม่ตะโกน/ไม่ทำเสียงไซเรน */
+const VCTX={market:['พี่คนพายเรืออยู่ไกลเลย','ตลาดคนเยอะเสียงดังจัง','ลมเย็นสบายจัง'],beach:['คนริมหาดอยู่ไกล คลื่นก็ดัง','ร้านมะพร้าวคนเยอะมาก','พระอาทิตย์กำลังตกแล้ว'],mountain:['พี่คนขับยืนอยู่อีกฝั่งลานจอด','น้ำตกดังมากเลย','ถึงยอดดอยแล้ว ดีใจจัง'],temple:['ลุงยามอยู่ตรงประตูไกล ๆ','ตีระฆังแล้ว เสียงยังก้องอยู่เลย','อยู่หน้าพระพุทธรูปแล้ว ใจสงบจัง']},
+ QV={long:'ลองลากเสียง “อาาา” ให้ยาวที่สุดเลย',loud:'ลองตะโกน “อา!” ให้ดังที่สุดเลย',up:'ลองส่งเสียง “อาาา” ไล่จากต่ำขึ้นสูงดูนะ',down:'ลองส่งเสียง “อาาา” ไล่จากสูงลงต่ำดูนะ',steady:'ลองลากเสียง “อาาา” ให้นิ่ง ๆ ไม่สั่นนะ',siren:'ลองทำเสียงไซเรน “อาาา” ขึ้นสูงแล้วลงต่ำดูนะ'},
+ QVT={loud:'ลองเปล่งเสียง “อา” ให้ดังและหนักแน่นเลย',siren:'ลองไล่เสียง “อาาา” ขึ้นสูงแล้วลงต่ำ เหมือนทำนองสวดมนต์ดูนะ'};
+const invite=(mode,S,l,q)=>mode=='word'?`ลองพูดคำว่า “${S.words[l]}” ดัง ๆ ชัด ๆ นะ`:`${(VCTX[S.scene]||VCTX.market)[l]} ${q&&((S.scene=='temple'&&QVT[q.t])||QV[q.t])||QV.long}`;
+async function start(mode){
+ app.innerHTML=`<div class="card cen"><p>🦜 นกแก้วกำลังวางแผนทริป…</p></div>`;
+ // เรื่องใหม่จาก Groq ผ่าน /api/story (เซิร์ฟเวอร์ถือคีย์); ส่งสถานที่/คำ/ประโยคของ 10 ทริปล่าสุดไปเพื่อไม่ให้ซ้ำ
+ /* ส่งโหมดเกม + เควสลากเสียงไปด้วย ให้เนื้อเรื่องชวนทำสิ่งที่ตรงกับโหมด (พูดประโยค / พูดคำ / ส่งเสียง “อาาา”) และมีเหตุผลจากฉาก */
+ let s=null;const rq=rd('resona_recent',[]),av=rq.flatMap(x=>[x.p,...x.w,...x.s]),qs=mode=='vowel'?TIERS.map(pick):null;
+ try{const r=await fetch('/api/story',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({scene:pick(SC),avoid:av,mode,quests:qs?qs.map(q=>q.t):undefined}),signal:AbortSignal.timeout(30000)});if(r.ok)s=await r.json()}catch(e){}
+ if(!s)try{const sm=await claude.use('sample');if(sm)s=await sm.json(`สร้างเนื้อเรื่องท่องเที่ยวในประเทศไทย 1 สถานที่ (สุ่มให้หลากหลาย เลขสุ่ม ${Math.random()}) สำหรับเกมฝึกพูดผู้ป่วยฟื้นฟูการพูด ภาษาไทยง่าย ข้อห้าม: ห้ามบอกให้พูดเบา ๆ ทุกกรณี ให้ชวนพูดดัง ๆ เสมอ ตอบ JSON อย่างเดียว: {"place":"ชื่อสถานที่","spots":["จุดเที่ยว 3 จุด"],"scene":"เลือกหนึ่งอย่างจาก market|beach|mountain|temple ให้ตรงกับสถานที่ (ตลาดน้ำ=market ทะเล/เกาะ=beach ภูเขา/ดอย/น้ำตก=mountain วัด/โบราณสถาน=temple)","intro":"นกแก้วเรโซน่า (ไกด์ของเกม) ทักทายและเล่าที่มา 2 ประโยค","beats":["เนื้อเรื่อง 3 ตอน ตอนละ 1-2 ประโยค ต้องตรงกับกิจกรรมของฉาก — market: ทักทายคนพายเรือที่ท่าเรือ / สั่งผลไม้ที่แผง / นั่งพักที่ศาลาริมน้ำ; beach: ทักทายคนริมหาด / สั่งน้ำมะพร้าว / ชมพระอาทิตย์ตก; mountain: ทักทายคนขับรถที่ลานจอด / ตะโกนสู้เสียงน้ำตก / ชูธงบนยอดดอย; temple: ทักทายลุงยามที่ประตูวัด / ถามทางพระภิกษุที่ลานเจดีย์ / กล่าวคำอธิษฐานหน้าพระ"],"ending":"ปิดเรื่อง 1 ประโยค","words":["คำสั้น ๆ 3 คำ เรียงตามด่าน 1-2-3 คำที่ n ต้องเป็นสิ่งของหรือสถานที่ในกิจกรรมของด่านที่ n"],"sentences":["3 ประโยค เรียงตามด่าน 1-2-3 ประโยคที่ n คือประโยคที่ผู้เล่นพูดจริงในกิจกรรมของด่านที่ n (ด่าน 1 ขึ้นต้นด้วยสวัสดีกับคนในฉาก ด่าน 2 เป็นการสั่งหรือถาม ด่าน 3 เป็นความรู้สึกหรือคำอธิษฐาน) ไม่เกิน 8 คำ ไม่ใช้ครับ/ค่ะ ต้องเชื่อมกับเนื้อเรื่อง beats ของด่านเดียวกัน"]}`)}catch(e){}
+ const ok=s&&s.place&&s.intro&&[s.words,s.sentences].every(a=>Array.isArray(a)&&a.length>=3);// คำ/ประโยคต้องครบ 3 ด่าน ไม่งั้นใช้เรื่องสำรอง
+ const fb=FB.filter(f=>!rq.slice(-3).some(x=>x.p==f.place)),S=ok?s:{...pick(fb.length?fb:FB)};if(!SC.includes(S.scene))S.scene=pick(SC);if(ok)S.spots=SPOTS[S.scene];if(!Array.isArray(S.beats)||S.beats.length<3)S.beats=S.spots.map(x=>'เรามาถึง'+x+'แล้ว!');S.ending=S.ending||'ทริปนี้สนุกมาก!';S.guide='เรโซน่า';// ไกด์คือนกแก้ว Resona ทุกทริป
+ if(mode!='sentence'&&S.mode!==mode)S.beats=S.beats.map((b,l)=>b+' '+invite(mode,S,l,qs&&qs[l]));/* เรื่องสำรองเขียนไว้สำหรับโหมดประโยค → ต่อท้ายคำชวนตามโหมด */
+ wr('resona_recent',[...rq,{p:S.place,w:S.words||[],s:S.sentences||[]}].slice(-10));preTTS(S);
+ G={mode,s:S,lvl:0,tries:0,qs,dl:null,res:[],pts:0};// คำ/ประโยคประจำด่านมาจากเรื่อง (ตรงกับภารกิจ)
+ rd('resona_base',null)===null||rd('resona_warm','')!==new Date().toDateString()?warm():level()}
+function level(){
+ const s=G.s;app.innerHTML=`<div class="card" style="padding:10px"><div class="row" style="margin-bottom:8px;flex-wrap:wrap"><b>📍 ${s.place} · ${s.spots[G.lvl]}</b><span><span id="dots"></span> <span id="pts" class="pts">⭐ <b>${rd(PK,0)}</b></span></span></div><div class="mut" style="margin:-2px 0 8px">🎬 ภารกิจ: ${ACT[s.scene][G.lvl]}</div><canvas id="cv" width="240" height="135"></canvas><div class="say" id="say"></div></div><div class="card" id="task"></div>`;
+ G.tries=0;G.an=initAnim(s.scene,G.lvl);G.nr=null;clearInterval(G.niv);walk=Date.now()+1800;loop();dots();
+ $('#say').innerHTML=`🦜 <b>${s.guide}:</b> กำลังพาไป${s.spots[G.lvl]}…`;
+ $('#task').innerHTML='<p class="cen mut">กำลังเดินทาง…</p>';
+ setTimeout(story,1900)}
+// ด่านวอร์มเสียง: ครั้งแรกของวัน (และจนกว่าจะมี baseline) — ตั้ง baseline ครั้งเดียวจากเสียงปกติ แล้วใช้เป็นเช็กไมค์ + วอร์มเสียงรายวัน
+function warm(){const T=G,first=rd('resona_base',null)===null;G={mode:'warm',lvl:0,next:T};
+ app.innerHTML=`<div class="card cen"><h2>🎤 วอร์มเสียงก่อนออกเดินทาง</h2><p>พูด “อา” <b>ด้วยเสียงปกติสบาย ๆ</b> ประมาณ 3 วินาที<br><span class="mut">ไม่ต้องตะโกน ${first?'เกมจะใช้เสียงนี้ตั้งเส้นเป้าหมายความดังให้พอดีกับเสียงของคุณ':'เป็นการวอร์มเสียงและเช็กว่าไมค์ใช้ได้'}</span></p><div class="big">อาาา</div><div style="text-align:left"><small class="mut">📈 ความคืบหน้า</small><div class="bar" style="margin-bottom:8px"><i id="qp" style="background:#7fd6a0"></i></div><small class="mut">🔊 ความดัง</small><div class="bar"><i id="lvl"></i></div></div><p id="rs" class="mut">กดปุ่มแล้วเริ่มพูดได้เลย</p><div id="bt"><button onclick="warmGo()">🎤 เริ่มวอร์มเสียง</button></div></div>`}
+const warmBtns=()=>'<button onclick="warmGo()">ลองอีกครั้ง</button> <button class="alt" onclick="G=G.next;level()">ข้ามไปก่อน</button>';
+async function warmGo(){
+ if(busy||!G||G.mode!='warm')return;hush();busy=true;const g=G;$('#bt').innerHTML='🎙️ กำลังฟัง… พูด “อา” สบาย ๆ <button class="alt" onclick="stopReq=1">⏹ พอแล้ว</button>';let m;
+ try{m=await rec(false)}catch(e){busy=false;if(G!==g)return;$('#rs').textContent='ใช้ไมค์ไม่ได้ กรุณาอนุญาตการใช้ไมโครโฟนในเบราว์เซอร์แล้วลองอีกครั้ง';$('#bt').innerHTML=warmBtns();return}
+ busy=false;if(G!==g)return;
+ if(m.sec<1){$('#rs').textContent='ยังได้ยินเสียงไม่ชัด ลองเข้าใกล้ไมค์อีกนิด แล้วพูด “อา” ให้ยาวขึ้นหน่อยนะ';$('#bt').innerHTML=warmBtns();return}
+ if(rd('resona_base',null)===null)wr('resona_base',m.db);wr('resona_warm',new Date().toDateString());
+ $('#rs').textContent='✅ ไมค์ใช้ได้ เสียงพร้อมแล้ว!';$('#bt').innerHTML='<button onclick="G=G.next;level()">ออกเดินทาง ➜</button>'}
+function story(){if(!G||!$('#task')||!G.an)return;const s=G.s,l=G.lvl,g=G,tx=(l==0?s.intro+'\n':'')+s.beats[l];g.ty=tx;
+ $('#say').innerHTML=`🦜 <b>${s.guide}:</b> <span id="sub"></span>`;
+ $('#task').innerHTML=`<div class="cen mut">📖 ตอนที่ ${l+1}: ${s.spots[l]}<br><small>ดูภาพและฟังไกด์เล่า · แตะกล่องข้อความเพื่อข้ามได้</small></div><div class="cen" style="margin-top:8px"><button id="nx" onclick="task()" disabled>เริ่มภารกิจ ▶</button></div>${ttsBtns()}`;
+ narrate(g,tx);$('#say').onclick=()=>nrEnd(g,1);clearInterval(g.niv);
+ g.niv=setInterval(()=>{if(G!==g||!g.nr||g.nr.done){clearInterval(g.niv);return}nrTick(g)},100);nrTick(g)}
+function dots(){const e=$('#dots');if(e)e.textContent='ด่าน '+(G.lvl+1)+'/3 · '+(G.dl?'ระดับ '+G.dl[G.lvl]+' · ':'')+'💚'.repeat(3-G.tries)+'🤍'.repeat(G.tries)}
+const Q=(t,n,disp,say,txt)=>({t,n,disp,say,txt});
+const TIERS=[[Q('long',5,'อาาาาาา','ลากเสียง “อา” ให้ดังและยาว 📣','ลากเสียง “อา” ให้ครบ 5 วินาที'),Q('loud',3,'อา!!! 📢','ตะโกน “อา” ให้ดังเกินเส้นประ (Think LOUD)','ทำเสียงให้ดังเกินเส้นประครบ 3 วินาที'),Q('up',4,'อาาาา ↗','ไล่เสียง “อา” จากต่ำขึ้นสูง 🎈','ไล่เสียงให้สูงขึ้นอย่างน้อย 4 ขั้นเสียง')],
+[Q('long',8,'อาาาาาาาาา','ลากเสียง “อา” ให้ยาวขึ้นอีก ⏱️','ลากเสียง “อา” ให้ครบ 8 วินาที'),Q('down',4,'อาาาา ↘','ไล่เสียง “อา” จากสูงลงต่ำ 🐘','ไล่เสียงให้ต่ำลงอย่างน้อย 4 ขั้นเสียง'),Q('steady',4,'อา ━━━','ลากเสียง “อา” ให้นิ่ง ระดับเสียงคงที่ 🎯','ถือระดับเสียงให้นิ่งรวมครบ 4 วินาที')],
+[Q('siren',4,'อาาา ↗↘','ทำเสียงไซเรน ขึ้นสูงแล้วลงต่ำ 🚨','ไล่เสียงขึ้น 4 ขั้นเสียง แล้วไล่ลงอีก 4 ขั้นเสียง'),Q('long',10,'อาาาาาาาาาาาา','ลากเสียง “อา” ให้ยาวที่สุด 🏆','ลากเสียง “อา” ให้ครบ 10 วินาที'),Q('loud',5,'อา!!! 📢📢','ตะโกน “อา” ดัง ๆ ให้นาน','ทำเสียงให้ดังเกินเส้นประครบ 5 วินาที')]];
+const VN={h50:[7.809,.1903,.0677],d50:[7.489,.3815,.133],b:[0.09763107,0.19526214,0.09763107],a:[1,-0.94280904,0.33333333]};
+function vfeat(raw,sr){const ra=sr/8000,n=Math.floor(raw.length/ra),x=new Float64Array(n),y=new Float64Array(n),B=VN.b,A=VN.a;
+ for(let i=0;i<n;i++){const a=Math.floor(i*ra),b=Math.max(a+1,Math.floor((i+1)*ra));let q=0;for(let k=a;k<b;k++)q+=raw[k];x[i]=q/(b-a)}
+ for(let i=0;i<n;i++)y[i]=B[0]*x[i]+(i>0?B[1]*x[i-1]-A[1]*y[i-1]:0)+(i>1?B[2]*x[i-2]-A[2]*y[i-2]:0);
+ const FR=512,rows=[];
+ for(let i=0;i+FR<n;i+=256){let mu=0;for(let k=0;k<FR;k++)mu+=y[i+k];mu/=FR;const f=new Float64Array(FR);let e=0;for(let k=0;k<FR;k++){f[k]=y[i+k]-mu;e+=f[k]*f[k]}if(e<=1e-12)continue;
+  const r=new Float64Array(110);for(let l=19;l<=108;l++){let q=0;for(let k=0;k<FR-l;k++)q+=f[k]*f[k+l];r[l]=q/e}
+  let l=20;for(let k=21;k<=106;k++)if(r[k]>r[l])l=k;const h=l>>1;if(h>=20&&r[h]>.9*r[l])l=h;
+  const a=r[l-1],b=r[l],c=r[l+1],d=a-2*b+c;rows.push([Math.sqrt(e/FR),8000/(l+(d?.5*(a-c)/d:0)),b])}
+ if(!rows.length)return null;const mx=Math.max(...rows.map(r=>r[0])),ok=rows.filter(r=>r[0]>.1*mx&&r[2]>.4);if(ok.length<5)return null;
+ const st=ok.map(r=>12*Math.log2(r[1])),mean=st.reduce((p,q)=>p+q,0)/st.length,sd=Math.sqrt(st.reduce((p,q)=>p+(q-mean)**2,0)/st.length),step=st.slice(1).reduce((p,q,i)=>p+Math.abs(q-st[i]),0)/(st.length-1);
+ const z=((sd-VN.h50[1])/(VN.d50[1]-VN.h50[1])+(step-VN.h50[2])/(VN.d50[2]-VN.h50[2]))/2;return{f0sd:sd,step,stab:Math.round(Math.max(0,Math.min(100,100-50*z)))}}
+const VT=[['อาาาาาา','ลากเสียง “อา” ให้ดังและยาวที่สุด 📣'],['อาาาา ↗','ไล่เสียง “อา” จากต่ำไปสูง ให้สูงที่สุด 🎈'],['อาาาา ↘','ไล่เสียง “อา” จากสูงลงต่ำ ให้ต่ำที่สุด 🐘']];
+function QT(){return G.mode=='vowel'?G.qs[G.lvl].txt:'พูดให้ชัดและดัง ระบบจะตัดและประเมินทันทีที่ได้ยินครบ'}
+function task(){
+ if(!G||!$('#task'))return;hush();if(G.nr&&!G.nr.done)nrEnd(G,1);const m=G.mode,s=G.s,l=G.lvl,A=G.an;let t,say;
+ if(A){tw(A,'live',0,700);tw(A,'lv',0,300);aimAt(A,CUT[s.scene+l].aim);tw(A,'bb',1,400)}// ลองใหม่: ฉากกลับสภาพก่อนพูด ลูกศรชี้เป้าภารกิจ
+ if(m=='vowel'){const q=G.qs[l];t=q.disp;say=q.say}else{t=m=='word'?s.words[l]:s.sentences[l];say='ภารกิจ '+ACT[s.scene][l]+': '+(m=='word'?'อ่านคำนี้':'พูดประโยคนี้')+'ด้วยเสียงดัง ๆ ชัด ๆ นะ'}
+ G.t=t;$('#say').innerHTML=`🦜 <b>${s.guide}:</b> ${say}<br><small>💡 Think LOUD! หายใจลึก ๆ แล้วพูดเหมือนคุยกับคนที่ยืนไกล ๆ</small>`;
+ if(A){tw(A,'cele',0,10);A.cft=0}
+ $('#task').innerHTML=`<div class="cd" id="cd"><b></b><small>หายใจลึก ๆ เตรียมตัว…</small></div><div class="big"${m=='sentence'?' style="font-size:30px"':''}>${t}</div><p class="cen" style="margin:0 0 10px"><b>🎯 เควส:</b> ${QT()}</p>
+ <div class="meter"><div class="lab">📈 ความคืบหน้าเควส</div><div class="bar"><i id="qp" style="background:#7fd6a0"></i><span id="qpt">0%</span></div></div>
+ <div class="meter"><div class="lab">🔊 ความดัง <small>(เส้นประ = เป้าหมาย · ถึงเป้าแถบเป็นสีเขียว)</small></div><div class="bar"><i id="lvl"></i><b></b></div></div>
+ <p id="rs" class="mut cen">กดปุ่มไมค์ แล้วรอนับ 3-2-1</p><div class="cen" id="bt"><button class="mic" onclick="go()" aria-label="เริ่ม${m=='vowel'?'ส่งเสียง':'พูด'}">🎤</button><div class="mut">${m=='vowel'?'กดแล้วส่งเสียงตามเควส':'กดแล้วอ่านออกเสียงดัง ๆ'}</div></div>`}
+async function go(){
+ if(busy||!G||G.cd)return;hush();const g=G,cd=$('#cd');g.cd=1;// นับถอยหลัง 3-2-1 ก่อนเริ่มอัด (เสียงนับจบก่อนไมค์เปิด)
+ for(const k of [3,2,1]){if(G!==g)return;if(cd){cd.className='cd on';const b=cd.querySelector('b');b.textContent=k;b.style.animation='none';void b.offsetWidth;b.style.animation=''}sfx(k==1?'go':'tick');await new Promise(r=>setTimeout(r,800))}
+ g.cd=0;if(cd)cd.className='cd';if(G!==g)return;
+ busy=true;if(g.an)tw(g.an,'aa',0,400);$('#bt').innerHTML=`<div class="recd">🎙️</div><div><b>กำลังฟัง… ${g.mode=='vowel'?'ส่งเสียงเลย!':'พูดเลย!'}</b></div><button class="alt" onclick="stopReq=1">⏹ พอแล้ว</button>`;let m;
+ try{m=await rec(G.mode!='vowel')}catch(e){busy=false;if(G!==g)return;$('#rs').textContent='ใช้ไมค์ไม่ได้ กรุณาอนุญาตการใช้ไมโครโฟนในเบราว์เซอร์แล้วลองอีกครั้ง';$('#bt').innerHTML='<button onclick="task()">ลองอีกครั้ง</button>';return}
+ if(G!==g){busy=false;return}// ผู้เล่นออกจากด่านระหว่างอัด
+ if(g.an)tw(g.an,'lv',0,400);
+ if(m.sec<.3){$('#rs').textContent='ยังไม่ได้ยินเสียง ตรวจว่าอนุญาตไมค์แล้ว และเข้าใกล้ไมค์อีกนิดนะ';$('#bt').innerHTML='<button onclick="task()">ลองอีกครั้ง</button>';busy=false;return}
+ $('#bt').innerHTML='🤖 AI กำลังประเมินเสียงของคุณ…';let j;try{j=await judge(m)}catch(e){}busy=false;if(G!==g)return;done(gate(j||loc(m),m),m)}
+function f0(b,sr){let n=b.length,best=0,bl=0;for(let L=Math.floor(sr/500);L<=Math.floor(sr/70);L++){let c=0;for(let i=0;i<n-L;i++)c+=b[i]*b[i+L];if(c>best){best=c;bl=L}}let e=0;for(const v of b)e+=v*v;return bl&&best>e*.3?sr/bl:0}
+// ความคืบหน้าเควสระดับเสียง; S.sm = เส้นระดับเสียง (เซมิโทน) กรองมัธยฐาน 5 เฟรม, เรียกเฉพาะตอนมีเฟรมเสียงใหม่ (เงียบแล้วไม่นับต่อ)
+// วัดระยะไล่เสียงจากจุดต่ำ/สูงสุดจริงของเส้นที่กรองแล้ว (เดิมใช้เปอร์เซ็นไทล์ 10/90 ทำให้ไล่ 4.5 ขั้นแล้วยังค้าง 94%) และข้าม 2 เฟรมแรกตอนเริ่มเปล่งเสียง
+function qstep(S,q){const sm=S.sm,cur=sm[sm.length-1];
+ if(q.t=='steady'){const w=sm.slice(-6);if(w.length>=6&&Math.max(...w)-Math.min(...w)<.8)S.stS+=.06;return S.stS/q.n}
+ const sg=sm.slice(q.t=='siren'&&S.ph?S.fi0:2);if(sg.length<3)return S.ph?.5:0;
+ const up=(cur-Math.min(...sg))/4,dn=(Math.max(...sg)-cur)/4;
+ if(q.t=='up')return up;if(q.t=='down')return dn;
+ if(!S.ph){if(up>=1){S.ph=1;S.fi0=sm.length-1}return Math.min(1,up)*.5}return .5+Math.min(1,dn)*.5}
+// ตัวถอดคำผ่านเซิร์ฟเวอร์ของเรา (/api/stt): คีย์อยู่บนเซิร์ฟเวอร์เท่านั้น เบราว์เซอร์มองไม่เห็น; เซิร์ฟเวอร์ไม่มีคีย์/เปิดไฟล์ตรง ๆ → ใช้ตัวฟังของเบราว์เซอร์
+// ไม่ส่งคำเป้าหมายไปด้วย — ตัวถอดคำจะเดาเข้าข้างคำเป้าหมายแม้พูดไม่ชัด (ผ่านง่ายเกินจริง)
+const STT={typhoon:{n:'Typhoon ASR'},groq:{n:'Groq Whisper'}};
+let STTON=null;// รายชื่อตัวถอดคำที่เซิร์ฟเวอร์มีคีย์ เช่น ['typhoon','groq']; null = ไม่มี
+fetch('/api/stt').then(r=>r.ok?r.json():null).then(j=>{STTON=j&&j.engines&&j.engines.length?j.engines:null;if(view==2&&!G)prof()}).catch(()=>{});
+try{localStorage.removeItem('resona_stt')}catch(e){}// v13 เก็บคีย์ไว้ในเบราว์เซอร์ — ลบทิ้ง
+// WAV 16 kHz mono 16 บิต ตัดความเงียบหัวท้าย (เหลือขอบ 0.3 วิ) เพราะ Whisper ชอบแต่งคำจากช่วงเงียบ; แทบไม่มีเสียง → null
+function wav(raw,sr){let a=0,b=raw.length-1;while(a<b&&Math.abs(raw[a])<.015)a++;while(b>a&&Math.abs(raw[b])<.015)b--;if(b-a<sr*.15)return null;
+ a=Math.max(0,a-Math.floor(sr*.3));b=Math.min(raw.length,b+Math.floor(sr*.3));
+ const r=sr/16000,n=Math.floor((b-a)/r),v=new DataView(new ArrayBuffer(44+n*2)),S=(p,s)=>[...s].forEach((c,i)=>v.setUint8(p+i,c.charCodeAt(0)));
+ S(0,'RIFF');v.setUint32(4,36+n*2,true);S(8,'WAVEfmt ');v.setUint32(16,16,true);v.setUint16(20,1,true);v.setUint16(22,1,true);v.setUint32(24,16000,true);v.setUint32(28,32000,true);v.setUint16(32,2,true);v.setUint16(34,16,true);S(36,'data');v.setUint32(40,n*2,true);
+ for(let i=0;i<n;i++){const k0=a+Math.floor(i*r),k1=Math.max(k0+1,a+Math.floor((i+1)*r));let s=0;for(let k=k0;k<k1;k++)s+=raw[k];v.setInt16(44+i*2,Math.max(-1,Math.min(1,s/(k1-k0)))*32767,true)}
+ return new Blob([v],{type:'audio/wav'})}
+async function sttApi(raw,sr){const w=STTON&&wav(raw,sr);if(!w)return{};
+ const ac=new AbortController(),to=setTimeout(()=>ac.abort(),20000);
+ try{const r=await fetch('/api/stt',{method:'POST',headers:{'Content-Type':'audio/wav'},body:w,signal:ac.signal}),j=await r.json().catch(()=>({}));
+  if(!r.ok)return{err:j.error||'รหัส '+r.status};return{p:j.p,text:String(j.text||'').trim()}}
+ catch(e){return{err:e.name=='AbortError'?'ตอบช้าเกิน 20 วิ':'เชื่อมต่อเซิร์ฟเวอร์ไม่ได้'}}finally{clearTimeout(to)}}
+console.assert(wav(new Float32Array(48000).map((_,i)=>.5*Math.sin(i/10)),48000).size==32044&&wav(new Float32Array(48000),48000)===null,'wav self-check failed');
+async function rec(useSR){const g=G;
+ const st=await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:false,noiseSuppression:false,autoGainControl:false}}),cx=new (window.AudioContext||window.webkitAudioContext)(),an=cx.createAnalyser();an.fftSize=2048;await cx.resume();const src=cx.createMediaStreamSource(st),gn=cx.createGain();gn.gain.value=0;src.connect(an);an.connect(gn);gn.connect(cx.destination);window._keep=[src,gn,an];stopReq=0;let qdone=0,qok=0,qT=0,loudS=0,qpg=0;const QS={sm:[],ph:0,fi0:0,stS:0};const b0=rd('resona_base',null),thrDb=b0!==null?b0+3:-33,aud=[];const sp=cx.createScriptProcessor(4096,1,1);sp.onaudioprocess=e=>{aud.push(new Float32Array(e.inputBuffer.getChannelData(0)))};src.connect(sp);sp.connect(gn);window._keep.push(sp);const bl=$('.bar b');if(bl)bl.style.left=Math.max(5,Math.min(95,(thrDb+55)*2.5))+'%';
+ let trans='',sr=null;const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+ if(useSR&&SR){try{sr=new SR();sr.lang='th-TH';sr.maxAlternatives=3;sr.onresult=e=>{qdone=1;let bs=-1;for(const a of Array.from(e.results[0])){const x=sim(a.transcript,g.t);if(x>bs){bs=x;trans=a.transcript}}};sr.onerror=()=>{};sr.start()}catch(e){sr=null}}
+ const b=new Float32Array(2048),dbs=[],fs=[];let t0=performance.now(),rs=null,lv=0,best=0;
+ await new Promise(r=>{const iv=setInterval(()=>{an.getFloatTimeDomainData(b);let e=0;for(const v of b)e+=v*v;const q=Math.sqrt(e/2048),n=performance.now(),db=20*Math.log10(q+1e-6);
+  const el=$('#lvl');if(el)el.style.width=Math.max(0,Math.min(100,(db+55)*2.5))+'%';const rr=$('#rs'),qp=$('#qp'),qq=g.mode=='vowel'?g.qs[g.lvl]:null;let pg=0;
+  if(qq&&qq.t=='loud'&&db>thrDb)loudS+=.06;
+  if(g.mode=='warm')pg=best/3;else if(!qq)pg=qdone?1:0;else if(qq.t=='long')pg=best/qq.n;else if(qq.t=='loud')pg=loudS/qq.n;else pg=qpg;// เควสระดับเสียง: qpg อัปเดตใน qstep ทุกเฟรมที่มีเสียง
+  pg=Math.max(0,Math.min(1,pg||0));if(qp)qp.style.width=pg*100+'%';const qt=$('#qpt');if(qt)qt.textContent=Math.round(pg*100)+'%';if(el)el.style.background=db>thrDb?'#3fc77a':'';
+  // ฉากขยับตามเสียง: เควสลากเสียงใช้ความคืบหน้าเควส, อ่านคำ/ประโยคใช้เวลาที่พูด (สูงสุด 0.9 จนกว่าจะรู้ผล) + ความดังขณะนั้น
+  if(g.an){tw(g.an,'live',qq?pg:Math.min(.9,best/(.6+.07*String(g.t||'').length)),250);tw(g.an,'lv',Math.max(0,Math.min(1,(db-thrDb+15)/15)),150)}
+  if(rr)rr.textContent=pg>=1?(g.mode=='warm'?'✅ ครบ 3 วินาทีแล้ว':'🎯 เควสสำเร็จ! กำลังประเมิน…'):best>0?'🎧 ความคืบหน้า '+Math.round(pg*100)+'%'+(qq&&qq.t=='siren'?(QS.ph?' · ตอนนี้ไล่เสียงลง ↘':' · ไล่เสียงขึ้น ↗'):''):'🎧 รอฟังเสียงของคุณ… ('+db.toFixed(0)+' dB)';
+  if(pg>=1&&!qok){qok=1;qT=n}
+  if(q>.008){if(rs===null)rs=n;lv=n;best=Math.max(best,(n-rs)/1000);dbs.push(db);const f=f0(b,cx.sampleRate);if(f){fs.push(f);const w=fs.slice(-5).sort((a,b)=>a-b);QS.sm.push(12*Math.log2(w[w.length>>1]));if(qq&&qq.t!='long'&&qq.t!='loud')qpg=qstep(QS,qq)}}else if(rs!==null&&n-lv>400)rs=null;
+  if((best>0&&n-lv>1500)||stopReq||(qok&&n-qT>(g.mode=='vowel'&&g.qs[g.lvl].t!='long'&&g.qs[g.lvl].t!='loud'?300:0))||n-t0>25000||(best==0&&n-t0>8000)){clearInterval(iv);r()}},60)});
+ if(sr){try{sr.stop()}catch(e){}if(!qdone)await new Promise(r=>setTimeout(r,900))}
+ const srate=cx.sampleRate,sk=useSR&&STTON;let vf=null,raw=null;
+ if((g.mode=='vowel'||sk)&&aud.length){const tot=aud.reduce((p,c)=>p+c.length,0);raw=new Float32Array(tot);let o=0;for(const c of aud){raw.set(c,o);o+=c.length}}
+ if(g.mode=='vowel'&&raw)try{vf=vfeat(raw,srate)}catch(e){}
+ st.getTracks().forEach(x=>x.stop());cx.close();
+ const transB=trans;let eng=trans?'browser':null,sttE=null;// transB = ที่เบราว์เซอร์ได้ยิน เก็บไว้เทียบความแม่นกับตัวถอดคำภายนอก
+ if(sk&&raw){const bt=$('#bt');if(bt&&G===g)bt.innerHTML='🤖 กำลังฟังคำที่พูด…';const x=await sttApi(raw,srate);if(x.text){trans=x.text;eng=x.p}else sttE=x.err||null}
+ const med=a=>a.length?a.slice().sort((x,y)=>x-y)[Math.floor(a.length/2)]:0,q=(a,p)=>a.slice().sort((x,y)=>x-y)[Math.floor((a.length-1)*p)]||0;
+ const db=dbs.length?dbs.reduce((x,y)=>x+y,0)/dbs.length:-60,lo=q(fs,.1),hi=q(fs,.9),third=Math.max(1,Math.floor(fs.length/3));
+ const base=rd('resona_base',null);// baseline ตั้งจากด่านวอร์มเสียงเท่านั้น (warmGo)
+ return{thr:thrDb,stab:vf?vf.stab:null,f0sd:vf?+vf.f0sd.toFixed(2):null,quest:qok,sec:+best.toFixed(1),db:+db.toFixed(1),dbd:+(db-(base??-30)).toFixed(1),f0:Math.round(med(fs)),semis:lo&&hi?+(12*Math.log2(hi/lo)).toFixed(1):0,dir:fs.length>6?+(12*Math.log2(med(fs.slice(-third))/med(fs.slice(0,third)))).toFixed(1):0,sim:trans?sim(trans,g.t):null,trans,eng,simB:transB?sim(transB,g.t):null,sttE}}
+function loc(m){const l=G.lvl,v=G.mode=='vowel',ld=m.dbd>=0?100:Math.max(0,100+m.dbd*10);let sc;
+ if(v&&l==0)sc=Math.min(60,m.sec*12)+ld*.4;else if(v)sc=Math.min(60,Math.abs(m.dir)*12)+Math.min(40,m.sec*10);else sc=.6*(m.sim??50)+.4*ld;
+ sc=Math.round(Math.min(100,sc));if(m.quest)sc=Math.max(sc,65);return{score:sc,pass:sc>=60,praise:sc>=60?'ทำได้ดีมาก!':'เกือบแล้ว!',tip:m.dbd<0?'ลองพูดให้ดังขึ้นอีกนิด (Think LOUD)':'รักษาความดังแบบนี้ไว้นะ'}}
+// กติกาผ่านด่านอ่านคำ/ประโยค: คำตรง ≥80% และดังพอ → ผ่านทันที | คำตรงแต่เบา → ยังไม่ผ่าน | คำตรง <50% → ไม่ผ่าน | ช่วงกลางให้ AI ตัดสิน
+function gate(r,m){
+ if(G.mode=='vowel'||m.sim==null)return r;
+ const loud=m.db>=(m.thr??-33)-6;
+ if(m.sim>=80&&loud)return{...r,pass:true,score:Math.max(r.score,75),praise:'พูดถูกต้องและดังพอ เยี่ยมมาก!'};
+ if(m.sim>=80)return{...r,pass:false,score:Math.min(r.score,55),praise:'พูดถูกต้องแล้ว!',tip:'แต่ยังเบาไปนิด ลองพูดให้ดังขึ้นอีก (Think LOUD)'};
+ if(m.sim<50)return{...r,pass:false,score:Math.min(r.score,45),praise:'พยายามได้ดีแล้ว ลองอีกครั้งนะ',tip:'พูดช้า ๆ ชัด ๆ ทีละคำ และดังเหมือนคุยกับคนที่ยืนไกล ๆ'};// เปลี่ยนแค่ข้อความ ไม่ให้คำชมของ AI/loc ขัดกับผล "ยังไม่ผ่าน"
+ return r}
+async function judge(m){
+ try{const sm=await claude.use('sample');if(!sm)return loc(m);
+  const goal=G.mode=='vowel'?G.qs[G.lvl].txt+' (เควสแบบ '+G.qs[G.lvl].t+' ตามหลัก LSVT LOUD)':'พูด “'+G.t+'” ให้ดังและชัด (ดูความตรงของคำ sim ควร ≥ 60 และความดัง)';
+  const r=await sm.json(`คุณเป็นผู้ช่วยนักแก้ไขการพูดที่ใช้หลัก LSVT LOUD (พูดดังขึ้น ใช้ความพยายามสูง "Think LOUD" ลากเสียงนาน ช่วงระดับเสียงกว้าง ฝึกวลีที่ใช้จริง) ประเมินผู้ป่วยจากค่าที่วัดได้จากไมค์ ตอบ JSON อย่างเดียว: {"score":0-100,"pass":true/false,"praise":"คำชมสั้น 1 ประโยค","tip":"คำแนะนำตาม LSVT LOUD 1 ประโยค"} ภาษาไทยง่าย อบอุ่นเหมือนเพื่อน\nภารกิจ: ${goal}\nเควส: ${m.quest?'ทำครบเป้าหมายแล้ว (ระบบตัดการอัดทันที)':'ยังทำไม่ครบเป้าหมาย'}\nค่าที่วัด: ระยะเสียงต่อเนื่อง ${m.sec} วินาที, ความดังเฉลี่ย ${m.db} dBFS (ต่างจาก baseline ของผู้ป่วย ${m.dbd} dB; ค่าสัมพัทธ์เพราะไมค์แต่ละเครื่องต่างกัน), ระดับเสียงกลาง ${m.f0} Hz, ช่วงระดับเสียง ${m.semis} เซมิโทน, ทิศทางระดับเสียง ${m.dir} เซมิโทน (บวก=สูงขึ้น), ${m.sim==null?'ไม่มีผลถอดเสียง':'ถอดเสียงได้ “'+m.trans+'” ความตรง '+m.sim+'%'}${m.stab!=null?'\nดัชนีความนิ่งของเสียง '+m.stab+'/100 (ความแกว่งระดับเสียง '+m.f0sd+' เซมิโทน เทียบฐานข้อมูล VOICED 208 คน: คนเสียงปกติมัธยฐาน 0.19 ผู้ป่วยกลุ่ม dysphonia มัธยฐาน 0.38 — เป็นค่าอ้างอิงคร่าว ๆ จากไมค์คนละชนิด ห้ามใช้วินิจฉัย)':''}\nเกณฑ์: pass เมื่อ score ≥ 60 ถ้าเควสครบให้ถือว่าผ่านเว้นแต่เสียงเบามากจริง ๆ ให้น้ำหนักความดังและความพยายามมากที่สุด อย่าตัดสินแรงเกินไป`);
+  if(r&&typeof r.score=='number')return{score:Math.round(r.score),pass:!!r.pass,praise:r.praise||'',tip:r.tip||''}}catch(e){}
+ return loc(m)}
+// ผลลัพธ์ภาษาคน: เทียบเป้าความดังแบบเดียวกับ gate() (เสียงพูดผ่อน 6 dB) และโทษเครื่องเมื่อถอดคำไม่ออกทั้งที่พูดดังพอ
+function plain(m){const v=G.mode=='vowel',tg=v?m.thr:m.thr-6,L=[];
+ if(v)L.push(m.quest?'🎯 ทำภารกิจเสียงได้ครบ':'🎯 ภารกิจเสียงยังไม่ครบ ไม่เป็นไรนะ');
+ L.push(`⏱ ส่งเสียงต่อเนื่องได้ ${m.sec} วินาที`);
+ L.push(m.db>=tg?'🔊 เสียงดังถึงเป้าแล้ว 👍':m.db>=tg-4?'🔊 เกือบถึงเป้า ดังขึ้นอีกนิดนะ':'🔊 เสียงยังเบาไป ลองพูดเหมือนคุยกับคนที่ยืนไกล ๆ');
+ if(!v){if(m.sim==null)L.push(window.SpeechRecognition||window.webkitSpeechRecognition||STTON?'🤖 เครื่องฟังคำไม่ออก ไม่ใช่ความผิดของคุณนะ':'🗣 เบราว์เซอร์นี้ฟังคำพูดไม่ได้ จึงดูแค่ความดัง');
+  else{L.push(`🗣 เครื่องได้ยินว่า “${esc(m.trans)}”${STT[m.eng]?` <small class="mut">(${STT[m.eng].n})</small>`:''}`);L.push(m.sim>=80?'✅ พูดคำได้ถูกต้อง':m.sim>=50?'🙂 ถูกเป็นส่วนใหญ่ ลองพูดช้า ๆ ชัด ๆ อีกครั้ง':m.db>=tg?'🤖 เครื่องฟังไม่ค่อยออก ไม่ใช่ความผิดของคุณนะ ลองพูดช้า ๆ ทีละคำ':'🔉 ลองพูดดังขึ้นอีกนิด เครื่องจะได้ยินชัดขึ้น')}}
+ if(m.sttE)L.push(`<small class="mut">⚠️ ตัวถอดคำภายนอกใช้ไม่ได้ (${m.sttE}) จึงใช้ตัวฟังของเบราว์เซอร์แทน</small>`);
+ return`<div style="text-align:left;margin:8px auto;max-width:380px">${L.map(x=>`<div>${x}</div>`).join('')}</div>`}
+function nxt(){if(!G||!G.res[G.lvl])return;G.lvl++;level()}// กันกดเบิ้ลแล้วข้ามด่าน
+function done(r,m){
+ const log=rd(LK,[]),before=rd(PK,0);const skip=!r.pass&&G.tries+1>=3?1:0;log.push({t:Date.now(),mode:G.mode,lvl:G.lvl,try:G.tries+1,pass:+r.pass,m:r.score,sec:m.sec||0,db:m.dbd||0,stab:m.stab??null,semis:m.semis??null,sim:m.sim??null,q:G.mode=='vowel'?G.qs[G.lvl].t:null,skip,eng:m.eng||null,simB:m.simB??null});wr(LK,log);const pts=r.pass?10:2;wr(PK,rd(PK,0)+pts);G.pts+=pts;if(r.pass||skip)G.res[G.lvl]={pass:+r.pass,skip,score:r.score};if(skip)G.flags=(G.flags||0)+1;
+ G.tries++;dots();const stars='⭐'.repeat(Math.round(r.score/34))||'☆',A=G.an;
+ if(A){tw(A,'aa',0,300);tw(A,'live',r.pass?1:Math.min(cl(aval(A,'live')),.7),r.pass?900:600)}// ผ่าน → ฉากเล่นจนจบ, ไม่ผ่าน → ค้างที่ทำได้
+ if(r.pass){if(A){tw(A,'cele',1,1400);A.cft=clk()}sfx('pass');setTimeout(()=>flyStars(3,before,before+pts),450)}// ฉลอง: คนในฉากตอบรับ + พลุกระดาษ + ดาวบินเข้าแต้ม
+ else{sfx('fail');countUp($('#pts b'),before,before+pts)}
+ const info=`<div class="star">${stars}</div><p><b>${esc(r.praise)}</b><br>💡 ${esc(r.tip)}</p>${plain(m)}<details class="mut" style="margin-bottom:10px"><summary>ตัวเลขสำหรับแพทย์</summary>⏱ ${m.sec} วิ · 🔊 ${m.dbd>=0?'+':''}${m.dbd} dB · 🎵 ${m.semis} เซมิโทน${m.sim!=null?' · 🗣 '+m.sim+'%':''}${m.stab!=null?' · 🎼 ความนิ่ง '+m.stab+'/100':''}</details>`;
+ if(r.pass){cheer=Date.now()+2600;pop('happy',pick(CHEER)+' +10 แต้ม');
+  const last=G.lvl==2;$('#task').innerHTML=`<div class="cen"><div class="big">✅ ผ่านด่านที่ ${G.lvl+1}</div>${info}<button onclick="${last?'win()':'nxt()'}">${last?'จบทริป 🎉':'ไปด่านต่อไป ➜'}</button></div>`}
+ else if(G.tries>=3){sad=Date.now()+3000;pop('sad','ไม่เป็นไรนะ ไปด่านต่อไปกัน! (+2 แต้ม)');const last=G.lvl==2;$('#task').innerHTML=`<div class="cen"><div class="big" style="color:var(--acc)">⚑ ยังไม่ถึงเป้า</div>${info}<p class="mut">บันทึกให้แพทย์เห็นแล้ว ไม่เป็นไรนะ ไปต่อกัน</p><button onclick="${last?'win()':'nxt()'}">${last?'จบทริป 🎉':'ไปด่านต่อไป ➜'}</button></div>`}
+ else{sad=Date.now()+2200;pop('sad',pick(TRY)+' (+2 แต้ม)');$('#task').innerHTML=`<div class="cen"><div class="big">🔁 ยังไม่ผ่าน</div>${info}<button onclick="task()">ลองใหม่ (เหลือ ${3-G.tries} ครั้ง)</button></div>`}}
+function pop(k,msg){
+ const c=$('#pc').getContext('2d'),f=document.createElement('canvas'),s=document.createElement('canvas');f.width=f.height=s.width=s.height=80;const [R,D]=pen(f.getContext('2d'));parrot(R,D,0,0,k,{});
+ if(k=='happy'){R(10,12,6,2,'#ffd400');R(12,10,2,6,'#ffd400');R(68,46,6,2,'#ff5a8a');R(70,44,2,6,'#ff5a8a');R(4,30,6,2,'#ff5a8a');R(6,28,2,6,'#ff5a8a')}
+ const o=s.getContext('2d');o.drawImage(f,0,0);o.globalCompositeOperation='source-in';o.fillStyle=OUT;o.fillRect(0,0,80,80);c.clearRect(0,0,80,80);// เส้นขอบเหมือนในฉาก
+ for(let dx=-2;dx<=2;dx++)for(let dy=-2;dy<=2;dy++)if((dx||dy)&&Math.abs(dx)+Math.abs(dy)<4)c.drawImage(s,dx,dy);c.drawImage(f,0,0);
+ $('#pm').textContent=msg;const p=$('#pop');p.classList.remove('on');void p.offsetWidth;p.classList.add('on');clearTimeout(popT);popT=setTimeout(()=>p.classList.remove('on'),3000)}
+function win(){if(!G||G.won)return;G.won=1;cheer=Date.now()+99999;sfx('win');if(G.an)G.an.cft=clk();const s=G.s,k=G.mode;$('#say').innerHTML=`🦜 <b>${s.guide}:</b> ${s.ending}`;pop('happy','สุดยอดที่สุดเลย! 🎉');
+ const msg='';
+ const rows=G.res.map((x,i)=>`<tr><td>ด่าน ${i+1}</td><td style="text-align:left">${s.spots[i]}</td><td>${x.skip?'⚑ ฝึกแล้ว':'⭐'.repeat(Math.max(1,Math.round(x.score/34)))}</td></tr>`).join('');
+ $('#task').innerHTML=`<div class="cen"><div class="big">🏆 จบทริป!</div><table style="margin:6px 0 10px">${rows}</table><p>ทริปนี้ได้ <b>+${G.pts} แต้ม</b></p>${msg?`<p>${msg}</p>`:''}<p class="mut">ผลถูกบันทึกในแท็บ “สถานะ” แล้ว${G.flags?'<br>⚑ = ยังไม่ถึงเป้า แพทย์จะเห็นในรายงาน':''}</p><button onclick="start('${k}')">เล่นอีกทริป</button> <button class="alt" onclick="tab(1)">ดูสถานะ</button></div>`}
+// ---- pixel scene ----
+// ภาพสำหรับผู้สูงอายุ: พื้นหลังฉาบขาวให้ซีดลง + ชั้นหน้า (ตัวละคร/ของประกอบ) มีเส้นขอบเข้ม 2px, ตัวละครขยาย 2 เท่า, ขยับเฉพาะที่สื่อความหมาย
+const OUT='#1d2a3a',BASE=128;
+const pen=c=>{const R=(x,y,a,b,col)=>{c.fillStyle=col;c.fillRect(Math.round(x),Math.round(y),a,b)};return[R,(cx,cy,r,col)=>{for(let d=-r;d<=r;d++){const q=Math.floor(Math.sqrt(r*r-d*d));R(cx-q,cy+d,2*q+1,1,col)}}]};
+const lp=(a,b,p)=>a+(b-a)*p,cl=(v,a=0,b=1)=>Math.max(a,Math.min(b,v));
+const mix=(a,b,p)=>{const A=parseInt(a.slice(1),16),B=parseInt(b.slice(1),16),f=s=>Math.round(lp((A>>s)&255,(B>>s)&255,cl(p)));return`rgb(${f(16)},${f(8)},${f(0)})`};
+// ---- แอนิเมชันเนื้อเรื่อง: ค่าใน G.an ไล่จากค่าเดิมไปค่าใหม่แบบค่อยเร่ง-ค่อยผ่อน ----
+let clk=()=>performance.now();// แยกไว้ให้ทดสอบเลื่อนเวลาได้
+const ease=p=>p<=0?0:p>=1?1:p<.5?4*p*p*p:1-Math.pow(-2*p+2,3)/2;
+function aval(A,k){const x=A&&A[k];return x==null?0:typeof x=='number'?x:x.a+(x.b-x.a)*ease((clk()-x.t)/x.d)}
+function tw(A,k,to,ms=2000){A[k]={a:aval(A,k),b:to,t:clk(),d:Math.max(1,ms)}}
+// ฉาก×ด่าน: init = สภาพก่อนเล่าเรื่อง, steps = ท่าที่เล่นตามจังหวะเสียงพากย์ (กล้อง [x,y,ซูม], ลูกศรชี้ปลาย [x,y], ค่าที่เปลี่ยน), aim = ลูกศรชี้เป้าภารกิจหลังเล่าจบ
+const CUT={
+// (กล้องตั้งให้ลูกศรเหนือหัวไม่หลุดขอบบน: cy ≤ ปลายลูกศร + 67.5/ซูม − 22)
+ market0:{init:{boat:0,look:0},aim:[198,36],steps:[{cam:[122,96,1.4],arrow:[122,92],set:{boat:1}},{cam:[196,58,1.5],arrow:[198,36],set:{look:1}}]},
+ market1:{init:{fr:0,bag:0},aim:[168,46],steps:[{cam:[160,94,1.4],arrow:[124,88],set:{fr:1}},{cam:[168,68,1.5],arrow:[168,46],set:{bag:1}}]},
+ market2:{init:{lotus:0},aim:[122,98],steps:[{cam:[166,86,1.35],arrow:[166,94],set:{}},{cam:[150,98,1.4],arrow:[122,98],set:{lotus:1}}]},
+ beach0:{init:{wave:0,look:0},aim:[206,36],steps:[{cam:[110,96,1.35],arrow:[110,92],set:{wave:1}},{cam:[204,58,1.5],arrow:[206,36],set:{look:1}}]},
+ beach1:{init:{coco:0,look:0},aim:[168,36],steps:[{cam:[160,90,1.4],arrow:[120,86],set:{coco:1}},{cam:[168,58,1.5],arrow:[168,36],set:{look:1}}]},
+ beach2:{init:{glow:0},aim:[200,30],steps:[{cam:[196,54,1.45],arrow:[200,30],set:{}},{cam:[156,96,1.3],arrow:[136,100],set:{glow:.35}}]},
+ mountain0:{init:{van:0,drv:0},aim:[208,44],steps:[{cam:[135,92,1.35],arrow:[135,78],set:{van:1}},{cam:[204,66,1.5],arrow:[208,44],set:{drv:1}}]},
+ mountain1:{init:{noise:0},aim:null,steps:[{cam:[170,62,1.35],arrow:[170,34],set:{noise:1}},{cam:[60,78,1.4],arrow:[44,48],set:{}}]},
+ mountain2:{init:{},aim:[180,68],steps:[{cam:[170,94,1.3],arrow:[170,76],set:{}},{cam:[180,66,1.5],arrow:[180,68],set:{}}]},
+ temple0:{init:{look:0},aim:[172,44],steps:[{cam:[165,48,1.35],arrow:[165,24],set:{}},{cam:[170,66,1.5],arrow:[172,44],set:{look:1}}]},
+ temple1:{init:{look:0},aim:[208,50],steps:[{cam:[132,58,1.4],arrow:[132,32],set:{}},{cam:[204,72,1.5],arrow:[208,50],set:{look:1}}]},
+ temple2:{init:{glow:0},aim:[127,86],steps:[{cam:[166,70,1.4],arrow:[166,44],set:{glow:.45}},{cam:[166,98,1.35],arrow:[127,86],set:{}}]}};
+console.assert(SC.every(s=>[0,1,2].every(l=>CUT[s+l]&&CUT[s+l].steps.length==2)),'CUT incomplete');
+const initAnim=(s,l)=>({cx:120,cy:67.5,z:1,ax:0,ay:0,aa:0,bb:0,live:0,lv:0,step:0,...CUT[s+l].init});
+function aimAt(A,p,ms=900){if(!p)return tw(A,'aa',0,400);if(aval(A,'aa')<.05){A.ax=p[0];A.ay=p[1];tw(A,'aa',1,500)}else{tw(A,'ax',p[0],ms);tw(A,'ay',p[1],ms);tw(A,'aa',1,300)}}
+function cue(A,st,ms=2000){const c=st.cam||[120,67.5,1];tw(A,'cx',c[0],ms+200);tw(A,'cy',c[1],ms+200);tw(A,'z',c[2],ms+200);if('arrow'in st)aimAt(A,st.arrow);for(const k in st.set||{})tw(A,k,st.set[k],ms)}
+function bg(R,D,off,S,L,sunY){
+ const T=(cx,top,h,c)=>{for(let r=0;r<h;r++)R(cx-r*.9,top+r,r*1.8+1,1,c)},m=(x,w)=>((x%w)+w)%w,N=n=>Array.from({length:n},(_,i)=>i);
+ R(0,0,240,100,['#9fe3f7','#6fcaf0','#ff9f6a'][L]);R(0,60,240,40,['#d4f4ff','#b8e6fa','#ffd9a0'][L]);
+ const sy=sunY??[30,20,62][L];if(L==2)D(200,Math.round(sy),19,'rgba(255,214,140,.5)');D(200,Math.round(sy),13,L==2?'#ffd24a':'#fff1a0');// แสงเรืองรอบดวงอาทิตย์ตอนเย็น
+ N(3).forEach(i=>{const x=m(i*110-off*.05,330)-50,y=14+i*14;D(x,y,6,'#fff');D(x+9,y-3,8,'#fff');D(x+19,y,6,'#fff');R(x,y,25,6,'#fff')});
+ if(S=='market'){
+  N(4).forEach(i=>{const x=m(i*75-off*.2,300)-40;R(x,78,22,14,'#b5865a');R(x-2,72,26,6,'#c0392b')});
+  R(0,92,240,43,'#4fb3d9');N(6).forEach(i=>R(m(i*45-off*.6,270)-10,97+(i%3)*6,10,1,'#9fe0f5'));
+  R(0,114,240,21,'#b98550');R(0,114,240,2,'#8a5a3a');N(8).forEach(i=>R(m(i*32-off*2,256)-10,116,1,19,'#8a5a3a'))}
+ else if(S=='beach'){
+  R(0,70,240,32,'#4fc3e8');R(0,70,240,3,'#9fe8f8');N(5).forEach(i=>R(m(i*55-off*.3,280)-20,78+(i%3)*7,12,1,'#bff1fb'));
+  R(0,100,240,35,'#f6e0a0');N(4).forEach(i=>R(m(i*70-off*1.2,280)-30,100,24,2,'#fff'));
+  N(2).forEach(i=>{const x=m(i*160-off,320)-40;R(x+2,66,5,38,'#8a5a3a');R(x-9,62,26,4,'#3fae5a');R(x-5,58,18,4,'#4cc56a');R(x-12,66,10,3,'#3fae5a');R(x+10,66,10,3,'#3fae5a')})}
+ else if(S=='mountain'){
+  N(4).forEach(i=>{const x=m(i*80-off*.15,340)-50;T(x,50,50,'#8fa8d8');T(x,50,14,'#fff')});
+  N(3).forEach(i=>{const x=m(i*120+30-off*.3,360)-50;T(x,62,40,'#6a9a7a')});
+  R(0,100,240,35,'#7ccf7a');N(3).forEach(i=>{const x=m(i*110-off,330)-30;R(x+4,88,3,14,'#6a4a2a');T(x+5,70,14,'#2f8a4a');T(x+5,78,14,'#3a9a54')});
+  R(0,112,240,14,'#e0c890')}
+ else{
+  N(3).forEach(i=>{const x=m(i*110-off*.4,360)-60;R(x-14,92,28,8,'#e8c15a');R(x-10,86,20,6,'#f1d27a');T(x,52,36,'#f6cf5a');R(x-1,44,2,10,'#f6cf5a')});
+  R(0,100,240,35,'#8fc77a');R(0,112,240,14,'#e6d3a8');
+  N(3).forEach(i=>{const x=m(i*90-off*1.4,270)-20,h=16+(i%2)*6;R(x,0,1,h,'#a33');D(x,h+5,4,'#ff4a3a')})}
+ R(0,0,240,135,'rgba(255,255,255,.35)')}
+// ---- ตัวการ์ตูน chibi แบบพิกเซลละเอียด: ออกแบบเป็น "หน่วย" แล้ววาดที่ u พิกเซลต่อหน่วย (u=2 = ละเอียด, u=1 = ตัวเล็กไกล ๆ) ----
+const INK='#1d2a3a',SKIN='#f8cfa0';
+const shp=(R,ox,oy,u)=>({E:(cx,cy,rx,ry,c)=>{const X=ox+cx*u,Y=oy+cy*u,RX=rx*u,RY=Math.max(.5,ry*u);for(let y=-Math.floor(RY);y<=RY;y++){const w=Math.floor(RX*Math.sqrt(Math.max(0,1-y*y/(RY*RY)))+.35);R(X-w,Y+y,2*w+1,1,c)}},
+ B:(x,y,w,h,c)=>R(ox+x*u,oy+y*u,w*u,h*u,c),P:(x,y,c,s=1)=>R(ox+x*u,oy+y*u,s,s,c)});
+const shade=(h,p=.78)=>mix(h,'#000000',1-p);
+// นกแก้วเรโซน่า chibi ในกล่อง 40×40 หน่วย (80×80 พิกเซล) หันขวา; k = idle|happy|sad, st.blink = หลับตา, st.talk = อ้าปาก (ตอนพากย์)
+function parrot(R,D,x,y,k,st={}){const u=2,{E,B,P}=shp(R,x,y,u),sad=k=='sad';
+ E(8,33,5,3,'#2f6fdc');E(5,35,4,2,'#2fbfa8');B(15,36,3,3,'#ff9a1e');B(22,36,3,3,'#ff9a1e');// หาง เท้า
+ E(19,30,10,8,'#b92a2a');E(18,29,9,7,'#e8403a');E(21,32,5,4,'#ffb48c');// ตัว (เงาล่างขวา) อก
+ if(!st.flap&&!st.point){E(11,29+(sad?2:0),4,6,'#2f6fdc');E(10,27+(sad?2:0),2,3,'#6a9cf0');P(12,33,'#1f4fb0');P(13,34,'#1f4fb0')}// ปีกแนบตัว (กระพือ/ชี้ วาดทับท้ายฟังก์ชัน)
+ E(16,3,1,3,'#ffc81e');E(20,2,2,4,'#ff9a1e');E(24,3,1,3,'#ffc81e');// หงอน
+ E(20,15,13,12,'#b92a2a');E(19,14,12,11,'#e8403a');E(14,8,4,2,'#ff7a66');P(12,10,'#fff',2);// หัวโต + ไฮไลต์
+ E(23,16,6,6,'#fff4ec');// แก้มขาวแบบนกมาคอว์
+ const ey=14;if(k=='happy'||st.blink){B(16,ey+1,1,1,INK);B(17,ey,4,1,INK);B(21,ey+1,1,1,INK);B(24,ey+1,1,1,INK);B(25,ey,2,1,INK);B(27,ey+1,1,1,INK)}
+ else{E(19,ey,3,4,INK);E(26,ey,2,3,INK);P(18,ey-2,'#fff',2);P(20,ey+2,'#fff');P(25.5,ey-1.5,'#fff',2);if(sad){B(19,ey+4,1,3,'#7fd0ff');B(25,ey+3,1,2,'#7fd0ff')}}
+ E(22,21,2,1,'#ff9bb0');
+ // จะงอยปากงุ้มปลายแหลม: ขอบบนโค้งลงจนบรรจบขอบล่างที่ปลาย, ขากรรไกรล่างอ้าลงตอนพูด
+ const mo=st.talk?2.2:k=='happy'?1:0,X0=x+28*u,W=9*u;
+ E(30,21.5+mo*.5,2.6,1.2+mo*.6,'#d99000');if(mo)E(31,20.5+mo*.4,2,mo*.55,'#7a2a2a');
+ for(let j=0;j<=W;j++){const t=j/W,top=y+(13.5+8.5*t*t)*u,bot=y+(20+2.6*t)*u;R(X0+j,top,1,Math.max(1,bot-top),'#ffc81e');R(X0+j,bot-1.2*u,1,1.2*u,'#d99000')}
+ R(X0+W-2,y+21*u,3,2*u,'#b87800');P(29.5,15.2,'#c98f00',2);R(X0+2,y+14.6*u,5,1,'#fff3b0');
+ if(st.flap){E(7,23,6,2.8,'#2f6fdc');E(4,22,3,1.4,'#6a9cf0');P(2,24,'#1f4fb0',2)}// ปีกกระพือขึ้นข้างตัว
+ if(st.point){E(28,26,8,2.6,'#2f6fdc');E(33,25,3,1.2,'#6a9cf0');P(36,27,'#1f4fb0',2)}}// กางปีกชี้ไปข้างหน้า
+// คน chibi (กว้าง ~22 หน่วย สูง ~40, เท้าที่ (0,0)): o.role, o.l/o.r = ตำแหน่งมือ (หน่วย), o.walk, o.pray, o.happy, o.t/o.ph = เวลา/เฟสกะพริบตา, o.sc = สเกลที่ big() ใช้
+const WAVE=(w,t)=>({r:[Math.round(lp(18,21,w)+(w>.98?Math.sin(t/220)*2:0)),Math.round(lp(-8,-31,w))]});
+const WAI=a=>({l:[Math.round(lp(4,9,a)),Math.round(lp(-8,-16,a))],r:[Math.round(lp(18,13,a)),Math.round(lp(-8,-16,a))],pray:a>.85});
+const POINT=p=>({l:[Math.round(lp(4,-6,p)),Math.round(lp(-8,-16,p))]});
+function person(R,D,x,y,o,hop){const fine=(o.sc||2)==2,u=fine?2:1,cx=FG.getContext('2d');if(fine){cx.save();cx.scale(.5,.5)}// วาดละเอียดกว่าตัวคูณ 2 ของฉาก
+ const X=x*u,Y=y*u,lo=shp(R,X,Y,u),{E,B,P}=shp(R,X,Y-(hop||0)*u,u),role=o.role||'',sk=o.sk||SKIN,sh=o.sh||'#ff8fb0',hair=o.hair||'#3b2a20',
+  blink=(((o.t||0)+(o.ph||0))%4200)<150,L=o.l||[4,-8],Rh=o.r||[18,-8],monk=role=='monk';
+ // หุ่นเพรียว: ตัวกว้าง ~12 หน่วย ขาเล็ก หัวโตตามแบบ chibi
+ if(monk){lo.B(7,-3,3,3,sk);lo.B(12,-3,3,3,sk)}else{lo.B(7,-5,3,o.walk==1?3:5,'#3a3f5c');lo.B(12,-5,3,o.walk==2?3:5,'#3a3f5c');lo.B(7,-1,3,1,'#262a40');lo.B(12,-1,3,1,'#262a40')}
+ if(monk){E(11,-11,7,10,'#d9780f');E(10.5,-12,6,9,'#f08a1a');E(16,-17,2.5,3,sk);for(let i=0;i<7;i++)B(6+i,-19+i,2,1,'#c8650a')}// จีวรห่มเฉียง ไหล่ขวาเปลือย
+ else{E(11,-12,6,8.5,shade(sh));E(11,-12.5,5,7.5,sh);
+  if(role=='vendor'){B(7,-14,8,9,'#fff6e6');B(6,-15,10,1,'#f0dcc0');for(let i=0;i<4;i++)P(7+i*2.5,-9-(i%2)*3,'#fff',2)}// ผ้ากันเปื้อน
+  else if(role=='boat'){B(10,-19,2,12,shade(sh,.6));P(10.5,-15,'#fff',2);P(10.5,-11,'#fff',2)}// เสื้อม่อฮ่อม
+  else if(role=='beach')for(let i=0;i<4;i++)E(7+i*2.7,-12+(i%2)*3,1.1,1.1,'#ff6a5a');// เสื้อลายดอก
+  else if(role=='coco')for(let i=0;i<6;i++)B(13,-19+i*2,3,1,i%2?'#d23a3a':'#fff');// ผ้าขาวม้าพาดไหล่
+  else if(role=='guard'){B(10,-19,2,12,shade(sh,.6));B(6,-17,2,2,'#ffd24a')}// เครื่องแบบ + ตรา
+  else if(role=='hiker')E(4,-13,3,6,'#b05a2a');// เป้
+  else if(role=='driver')B(8,-20,6,2,'#fff')}// ปกเสื้อโปโล
+ if(monk){E(11,-27,10.5,9.5,'#e2a878');E(10.5,-28,9.5,8.5,'#efbb8c');E(8,-34,4,1,'#f6d2ac')}// หัวโล้น
+ else{E(11,-28,11,10.5,hair);E(11,-26,9.5,8.5,sk);E(14,-22,4,2,shade(sk,.92));B(3,-33,16,3,hair)}
+ if(!blink){E(7,-26,2,3,INK);E(15,-26,2,3,INK);P(6,-28,'#fff',2);P(14,-28,'#fff',2)}else{B(5,-26,4,1,INK);B(13,-26,4,1,INK)}
+ E(4.5,-21,2,1,'#ff9bb0');E(17.5,-21,2,1,'#ff9bb0');
+ if(o.happy){E(11,-20,2.5,1.5,'#b8434a');B(10,-21,3,1,'#fff')}else{B(10,-20,3,1,'#b8434a');P(9,-21,'#b8434a',2);P(13,-21,'#b8434a',2)}
+ if(role=='guard')B(7,-22.5,8,1,'#6a6a6a');// หนวด
+ if(role=='boat'||role=='beach'||role=='coco'){E(11,-36,14,3,'#cfa64e');E(11,-40,7.5,4,'#f1d27a');B(5,-37,12,1,'#b8903e');if(role=='boat')B(10,-45,2,2,'#b8903e')}// งอบ / หมวกสาน
+ else if(o.hc){E(11,-35,10.5,5,o.hc);B(18,-34,7,2,o.hc);B(2,-33,18,1,shade(o.hc))}// หมวกแก๊ป
+ else if(role=='vendor'){E(11,-35,11,4,'#ff4f86');E(21,-33,3,2,'#ff4f86');E(23,-31,2,2,'#e23a72');for(let i=0;i<4;i++)P(5+i*4,-36,'#fff',2)}// ผ้าโพกหัว + ปม
+ const arm=(sx,sy,hx,hy,c)=>{const n=Math.max(Math.abs(hx-sx),Math.abs(hy-sy),1);for(let i=0;i<=n;i++)B(sx+(hx-sx)*i/n-1,sy+(hy-sy)*i/n-1,2.5,2.5,c);E(hx,hy,1.5,1.5,sk)};// แขนวาดหลังหัว: โบกมืออยู่หน้าหัว
+ arm(5,-15,L[0],L[1],monk?'#f08a1a':sh);arm(17,-15,Rh[0],Rh[1],monk?sk:sh);if(o.pray)B(10,-19,2,5,sk);
+ if(fine)cx.restore()}
+// กล่องคำพูดและลูกศร วาดทับภาพหลังผ่านกล้องด้วยความละเอียดจริงของจอ (ซูมแล้วยังคม); s = พิกเซลจอต่อพิกเซลฉาก
+function bubble(o,X,Y,s,e,sc,side){o.save();const px=side=='r'?X+48*s:X+12*s,py=side=='r'?Y+20*s:Y+44*s;o.translate(px,py);o.scale(sc,sc);o.translate(-px,-py);
+ o.fillStyle='#12304a';o.fillRect(X-2*s,Y-2*s,48*s,40*s);if(side=='r')o.fillRect(X+44*s,Y+14*s,8*s,12*s);else o.fillRect(X+6*s,Y+36*s,12*s,8*s);
+ o.fillStyle='#fff';o.fillRect(X,Y,44*s,36*s);if(side=='r')o.fillRect(X+44*s,Y+16*s,6*s,8*s);else o.fillRect(X+8*s,Y+36*s,8*s,6*s);
+ o.font=`${Math.round(24*s)}px "Segoe UI Emoji","Apple Color Emoji","Noto Color Emoji",sans-serif`;o.textAlign='center';o.textBaseline='middle';o.fillText(e,X+22*s,Y+19*s);o.restore()}
+function arrow(o,X,Y,s,a){o.save();o.globalAlpha=a;o.lineJoin='round';o.lineWidth=Math.max(2,1.6*s);o.strokeStyle=OUT;o.fillStyle='#ffa800';o.beginPath();
+ o.moveTo(X,Y);o.lineTo(X-7*s,Y-8*s);o.lineTo(X-3*s,Y-8*s);o.lineTo(X-3*s,Y-17*s);o.lineTo(X+3*s,Y-17*s);o.lineTo(X+3*s,Y-8*s);o.lineTo(X+7*s,Y-8*s);o.closePath();o.fill();o.stroke();o.restore()}
+// ของประกอบฉาก + คนในฉาก (ชั้นหน้า R/D มีเส้นขอบ, ชั้นล่าง Ru ไม่มีเส้นขอบ) ตามค่าแอนิเมชันใน A; lv = ความคืบหน้าจากเสียงผู้เล่น 0..1
+// คืนค่า b = กล่องคำพูด [x,y,อีโมจิ,ด้านหาง], over = ของที่วาดทับหลังทำเส้นขอบ
+function stage(R,D,g,t,S,L,ch,A,Ru){
+ const k=S+L,lv=cl(aval(A,'live')),lk=cl(aval(A,'look')),hp=(ch?Math.abs(Math.sin(t/220))*3:0)+Math.sin(lk*Math.PI)*4,
+  T=(cx,top,h,c)=>{for(let r=0;r<h;r++)R(cx-r*.9,top+r,r*1.8+1,1,c)},
+  ce=cl(aval(A,'cele')),happy=ce>.05,// ฉลองตอนผ่านด่าน: คนในฉากยิ้มกว้าง + ท่าตอบรับเฉพาะฉาก
+  big=(x,o,f,sc=2,by=BASE)=>{g.save();g.translate(x,by);g.scale(sc,sc);person(R,D,0,0,{happy,...o,sc,t,ph:x*97},hp+(Math.sin(t/650+x*.07)+1)*.25);if(f)f();g.restore()};// + หายใจเบา ๆ
+ if(k=='market0'){const bv=aval(A,'boat'),bx=lp(-80,90,bv);if(bv>.01&&bv<.99)for(let i=0;i<3;i++)Ru(bx-8-i*9,104+(i%2)*3,7-i*2,1,'#d8f4ff');/* น้ำกระเพื่อมตอนเรือเข้า */R(bx,100,64,8,'#8a5a3a');R(bx+6,108,52,4,'#6a4020');D(bx+16,98,3,'#ff5a3a');D(bx+28,98,3,'#ffd24a');D(bx+40,98,3,'#7ccf5a');
+  big(176,{role:'boat',sh:'#34508f',...WAVE(lv,t)},()=>{R(1,-30,2,30,'#7a5230');R(0,-8,4,8,'#a0703a')});return{b:[120,36,'👋','r']}}
+ if(k=='market1'){for(let i=0;i<7;i++)R(104+i*16,46,16,10,i%2?'#ffa800':'#fff');R(106,56,4,72,'#7a5230');R(210,56,4,72,'#7a5230');
+  const by=Math.round(lp(-4,-20,aval(A,'bag'))-6*ce),hx=-Math.round(34*ce),n=lv*6,inb=Math.floor(n+1e-6),FC=['#ff5a3a','#ffd24a','#7ccf5a','#ff8fb0','#ffa800','#7ccf5a'];
+  // ถุงหิ้วพลาสติกสีขาวถือไว้ข้างตัว (ไม่บังหน้า) ผลไม้โผล่ปากถุงตามจำนวนที่ใส่แล้ว; ผ่านด่าน → ยื่นถุงไปทางนกแก้วด้วยมือซ้าย
+  big(146,{role:'vendor',sh:'#ff8fb0',...(ce>.4?{l:[23+hx,by+1]}:{r:[21+hx,by+1]})},()=>{for(let i=0;i<Math.min(3,inb);i++)D(22+hx+i*3,by,2,FC[i]);
+   R(20+hx,by-4,2,4,'#e8e8e8');R(28+hx,by-4,2,4,'#e8e8e8');R(19+hx,by,12,12,'#f7f7f7');R(19+hx,by,12,1,'#d8d8d8');R(19+hx,by+11,12,1,'#d0d0d0');R(21+hx,by+4,8,1,'#ff8fb0')});
+  R(100,100,120,28,'#b98550');R(100,100,120,3,'#8a5a3a');const fr=aval(A,'fr');
+  FC.forEach((c,i)=>{const ap=cl(fr*6-i),p=cl(n-i);if(p>=1||ap<=0)return;D(lp(116+i*17,196,p),lp(96,128+2*by,p)-Math.sin(p*Math.PI)*16,Math.max(1,Math.round(6*ap*(1-.35*p))),c)});
+  return{b:[90,36,'🍉','r']}}
+ if(k=='market2'){const lo=aval(A,'lotus');if(lo>.02)[122,206,234].forEach((x,i)=>{const y=Math.round(110+(1-lo)*6),b=cl(lv*3-i);Ru(x-11,y+2,22,3,'#3fae5a');Ru(x-9,y+1,18,1,'#5fcf7a');
+   if(b<.15){D(x,y-4,4,'#ff8fb0');R(x,y-9,1,3,'#ffb0c8')}else{const o=Math.round(2+4*b);D(x-o,y-3,4,'#ff8fb0');D(x+o,y-3,4,'#ff8fb0');D(x,y-4-Math.round(3*b),4,'#ffb0c8');D(x,y-2,2,'#ffd24a')}});
+  R(104,38,128,8,'#c0392b');R(112,30,112,8,'#d9532e');R(110,46,5,70,'#7a5230');R(221,46,5,70,'#7a5230');R(104,116,128,6,'#a0703a');R(136,100,60,5,'#8a5a3a');R(140,105,3,11,'#7a5230');R(189,105,3,11,'#7a5230');R(164,90,6,10,'#7fd6a0');return{b:[44,4,'😌']}}
+ if(k=='beach0'){const wv=aval(A,'wave');if(wv>.01&&wv<.99){const y=Math.round(88+14*wv);Ru(0,y,240,2,'#fff');Ru(0,y+2,240,1,'#dff6ff');for(let x=8;x<240;x+=26)Ru(x,y-2,6,2,'#fff')}
+  for(let d=-16;d<=0;d++){const q=Math.floor(Math.sqrt(256-d*d));R(124-q,62+d,2*q+1,1,'#ff5a8a')}R(108,62,33,2,'#fff');R(123,63,3,65,'#f2f2f2');R(132,112,32,5,'#4fc3e8');R(158,98,6,14,'#4fc3e8');R(134,117,2,11,'#888');R(160,117,2,11,'#888');
+  big(184,{role:'beach',sh:'#ffd24a',...WAVE(lv,t)});return{b:[128,36,'👋','r']}}
+ if(k=='beach1'){R(100,48,124,6,'#c9a050');R(106,42,112,6,'#dcb868');R(106,54,4,50,'#7a5230');R(214,54,4,50,'#7a5230');big(146,{role:'coco',sh:'#7ccf5a'});
+  const dk=cl(lv/.3);if(dk>0){const y=Math.round(lp(108,90,dk)-8*ce),x=Math.round(162-50*ce);D(x,y,8,'#8fb04a');if(lv>.5)D(x,y-6,4,'#f4efd2');if(lv>.75)R(x+3,y-17,2,11,'#ff8fb0');if(lv>.98){R(x-5,y-15,1,9,'#888');R(x-9,y-16,9,2,'#ffd24a')}}// ผ่านด่าน → ยื่นมะพร้าวมาทางนกแก้ว
+  R(100,100,124,28,'#e0b070');R(100,100,124,3,'#a0703a');const co=aval(A,'coco');[132,184,200,216].forEach((x,i)=>{const a=cl(co*4-i);if(a>0)D(x,95,Math.max(1,Math.round(7*a)),'#7a9a3a')});
+  return{b:[90,36,'🥥','r']}}
+ if(k=='beach2'){const gl=Math.max(aval(A,'glow'),lv);if(gl>.02){if(lv>.02)Ru(0,0,240,70,`rgba(255,130,70,${(.16*lv).toFixed(3)})`);for(let i=0;i<5;i++){const w=Math.round((8+i*7)*gl);Ru(200-Math.round(w/2),74+i*5,w,2,'#ffd24a')}}
+  for(let i=0;i<6;i++)R(112+i*12,116,12,8,i%2?'#fff':'#ff8fb0');D(136,110,6,'#7a9a3a');R(138,100,2,5,'#fff');R(160,104,8,12,'#ffd24a');return{b:[44,4,'🌅']}}
+ if(k=='mountain0'){const vn=aval(A,'van'),ox=Math.round(lp(-180,0,vn)),sp=ox*.15;if(vn>.01&&vn<.99)for(let i=0;i<4;i++)Ru(88+ox-i*10,116-i*2,6-i,5-i,'#e9dcc0');/* ฝุ่นตอนรถวิ่งเข้า */R(96+ox,82,78,36,'#f2f2f8');R(102+ox,88,20,12,'#9fd8f0');R(126+ox,88,20,12,'#9fd8f0');R(150+ox,88,18,12,'#9fd8f0');R(96+ox,110,78,6,'#ffa800');
+  [112,158].forEach(x=>{D(x+ox,120,7,'#333');D(x+ox,120,3,'#999');R(x+ox+Math.round(Math.cos(sp)*3)-1,120+Math.round(Math.sin(sp)*3)-1,2,2,'#555')});
+  const dv=aval(A,'drv');if(dv>.01)big(Math.round(lp(150,186,dv)),{role:'driver',sh:'#e08a3a',hc:'#2389a8',walk:dv<.98?1+Math.floor(t/180)%2:0,...WAVE(lv,t)});return{b:[130,36,'👋','r']}}
+ if(k=='mountain1'){if(lv>.98&&!A.hikOn){A.hikOn=1;tw(A,'hik',1,900)}const hk=aval(A,'hik');if(hk>.01)big(196,{role:'hiker',sh:'#3fae5a',hc:'#e32d2d',...WAVE(1,t)},null,1,Math.round(lp(90,40,hk)));
+  R(112,44,40,84,'#8a8a9a');R(188,44,40,84,'#8a8a9a');R(112,38,116,8,'#5f9a5f');R(152,44,36,74,'#9fdcf5');for(let i=0;i<4;i++)R(156+i*8,44+((t/30+i*17)%60),3,14,'#e6f7ff');R(108,114,124,14,'#7fd0ff');D(170,114,10,'#e6f7ff');
+  const nz=aval(A,'noise'),li=cl(aval(A,'lv'));
+  // คลื่นเสียงโค้ง: เสียงน้ำตก (เทา โค้งไปทางซ้าย) ถูกเสียงผู้เล่น (ส้ม โค้งไปทางขวา) ดันออกไป
+  const arc=(R2,x,cy,h,dir,c)=>{for(let y=-h;y<=h;y++)R2(x+dir*Math.round(3*(1-(y/h)**2)),cy+y,3,1,c)};
+  return{b:[44,4,'📣'],voice:1,over:R2=>{for(let i=0;i<8;i++){const q=((t/700)+i/8)%1;R2(Math.round(170+(i-3.5)*q*9),Math.round(112-Math.sin(q*Math.PI)*9),2,2,'#ffffff')}// ละอองน้ำตก
+   const gn=Math.round(4*nz*(1-lv));for(let j=0;j<gn;j++)arc(R2,146-j*10,86,5+j*3,-1,'#8c96a3');
+   const vn=busy||lv>.01?Math.ceil(5*Math.max(lv,li*.9)):0;for(let j=0;j<vn;j++)arc(R2,86+j*11,86,Math.round((4+j*3)*(.7+.3*li)),1,'#ff7a5a')}}}
+ if(k=='mountain2'){const up=lv>.98,wv=up?Math.round(Math.sin(t/600)*1.5):0,fy=Math.round(lp(72,30,lv)),fw=Math.round(10+18*lv);
+  T(170,80,48,'#9a9aaa');R(160,92,10,3,'#bbb');R(169,30,2,52,'#777');R(171,fy+wv,fw,18,'#e32d2d');if(fw>16)R(171+Math.round(fw/2)-5,fy+5+wv,10,8,'#fff');return{b:[44,4,'🏔️']}}
+ if(k=='temple0'){R(110,46,12,82,'#f1d27a');R(208,46,12,82,'#f1d27a');R(102,34,126,12,'#d9532e');R(112,26,106,8,'#e86a3a');big(150,{role:'guard',sh:'#b09060',hc:'#5a3a2a',hair:'#9a9a9a',...WAI(lv)});return{b:[94,48,'🙏','r']}}
+ if(k=='temple1'){D(132,92,20,'#f6cf5a');R(92,116,80,12,'#e8c15a');R(100,108,64,8,'#f1d27a');R(129,48,6,26,'#f6cf5a');R(126,66,12,8,'#f1d27a');R(125,60,14,3,'#e8c15a');R(131,36,2,12,'#f6cf5a');
+  const n=Math.floor(lv*6+1e-6);for(let i=0;i<n;i++)R(194-i*9,124-(i%2),4,2,'#ffa800');big(186,{role:'monk',sk:'#efbb8c',...(ce>.5?WAI(1):POINT(lv))});/* ผ่านด่าน → พระพนมมืออวยพร */return{b:[130,36,'🗺️','r']}}
+ const gw=Math.max(aval(A,'glow'),lv);if(gw>.97)for(let a=0;a<8;a++){const c=Math.cos(a*Math.PI/4),s=Math.sin(a*Math.PI/4);for(let r=24;r<30;r+=2)Ru(166+Math.round(c*r),70+Math.round(s*r),2,2,'#ffe680')}
+ D(166,70,20,mix('#fff6dc','#ffe066',gw));R(124,112,84,16,'#e8c15a');R(138,100,56,14,'#f6cf5a');R(152,76,28,26,'#f6cf5a');D(166,66,10,'#f6cf5a');D(166,55,3,'#f6cf5a');R(156,98,20,4,'#e8c15a');
+ [126,204,114,216].forEach((x,i)=>{const h=i>1?10:14,y=108-h;R(x,y,3,h,'#fff');if(lv*4>i+.001){D(x+1,y-3,2,'#ffa800');R(x+1,y-4,1,2,'#fff1a0')}else R(x+1,y-2,1,2,'#555')});
+ D(138,104,4,'#ff8fb0');D(194,104,4,'#fff');
+ return{b:[44,4,'🙏'],over:R2=>{if(gw>.97)for(let i=0;i<7;i++){const a=i*.9,r=26+(i%3)*3,x=Math.round(166+Math.cos(a)*r),y=Math.round(70+Math.sin(a)*r*.8);if(Math.sin(t/300+i*1.7)>.3){R2(x,y-2,1,5,'#fff6c0');R2(x-2,y,5,1,'#fff6c0')}}}}}// ประกายรอบพระพุทธรูปเมื่อจุดเทียนครบ
+let FG,SH,FR,lastStep=0;// ชั้นหน้า, เงาสำหรับทำเส้นขอบ, ภาพเต็มก่อนผ่านกล้อง
+const mkc=(w=240,h=135)=>{const c=document.createElement('canvas');c.width=w;c.height=h;return c};
+// วาดฉากเต็ม 240×135 ลง FR (ใช้ทั้งในเกมและภาพย่อหน้าแรก): o.walk เดินทาง, o.cheer ดีใจ, o.sad, o.talk ไกด์พูด, o.point กางปีกชี้, o.noParrot
+function paint(t,S,L,A,o={}){if(!FG){FG=mkc();SH=mkc();FR=mkc()}
+ const g=FR.getContext('2d'),fx=FG.getContext('2d'),sx=SH.getContext('2d'),[R,D]=pen(g),[Rf,Df]=pen(fx),ch=!!o.cheer,w=!!o.walk;
+ bg(R,D,o.off||0,S,L,S=='beach'&&L==2?lp(46,74,cl(aval(A,'live'))):null);fx.clearRect(0,0,240,135);
+ const st=stage(Rf,Df,fx,t,S,L,ch,A,R);
+ // นกแก้ว: เดิน = กระโดดกระพือปีก, ดีใจ = กระโดด, ปกติ = หายใจเบา ๆ (ขยับ 1 พิกเซล)
+ let gx=4,gy=BASE-76,flap=0,ph=0;
+ if(w){ph=(t/340)%1;gy-=Math.round(Math.sin(ph*Math.PI)*7);flap=ph<.5}else if(ch){gy-=Math.round(Math.abs(Math.sin(t/220))*6);flap=Math.sin(t/220)>0}else gy+=Math.round((Math.sin(t/650)+1)*.5);
+ if(!o.noParrot){Rf(gx+76,gy+8,2,54,'#888');Rf(gx+78,gy+8,18,12,'#ffa800');Rf(gx+84,gy+11,5,5,'#fff');
+  parrot(Rf,Df,gx,gy,ch?'happy':o.sad?'sad':'idle',{blink:t%3800<140,talk:o.talk&&Math.floor(t/130)%2==0,flap,point:o.point&&!w})}
+ sx.globalCompositeOperation='copy';sx.drawImage(FG,0,0);sx.globalCompositeOperation='source-in';sx.fillStyle=OUT;sx.fillRect(0,0,240,135);sx.globalCompositeOperation='source-over';
+ for(let dx=-2;dx<=2;dx++)for(let dy=-2;dy<=2;dy++)if((dx||dy)&&Math.abs(dx)+Math.abs(dy)<4)g.drawImage(SH,dx,dy);
+ g.drawImage(FG,0,0);
+ if(w&&ph<.3)for(let i=0;i<3;i++)R(gx+18-i*7-Math.round(ph*18),BASE-3-(i%2)*2,4-i,2,'#e9dcc0');// ฝุ่นตอนเท้าแตะพื้น
+ if(st.over)st.over(R);if(busy&&!st.voice)for(let i=0;i<3;i++){const q=((t/160)+i*3)%9;R(gx+84+q*3,gy+36-q*.75,2,6+q*1.5,'#ff7a5a')}
+ if(ch)for(let i=0;i<5;i++){const x=110+i*26,yy=70-((t/40+i*23)%55);R(x,yy,2,1,'#ff5a8a');R(x+3,yy,2,1,'#ff5a8a');R(x-1,yy+1,8,2,'#ff5a8a');R(x+1,yy+3,4,1,'#ff5a8a');R(x+2,yy+4,2,1,'#ff5a8a')}
+ const ce=A&&A.cft?clk()-A.cft:1e9;if(ce<3800)for(let i=0;i<26;i++){// พลุกระดาษตกช้า ๆ ตอนผ่านด่าน (ไม่กะพริบ)
+  const e=ce-(i%7)*180;if(e<0)continue;const y=Math.round(-6+e*.045);if(y>136)continue;
+  R(Math.round((i*53)%236+Math.sin(e/300+i)*6),y,Math.abs(Math.sin(e/160+i))>.5?3:1,3,['#ff5a8a','#ffd24a','#4cc56a','#2f8fe0','#ff9a1e'][i%5])}
+ return{st,ph}}
+function loop(){cancelAnimationFrame(raf);let last=performance.now();
+ const f=n=>{const cv=$('#cv');if(!cv||!G||!G.s||!G.an)return;const A=G.an,dpr=window.devicePixelRatio||1,Wd=Math.round((cv.clientWidth||480)*dpr),Hd=Math.round(Wd*135/240);if(cv.width!==Wd){cv.width=Wd;cv.height=Hd}
+  const o=cv.getContext('2d'),t=n,w=walk>Date.now(),S=G.s.scene,L=G.lvl,N=G.nr;off+=w?(n-last)*.03:0;last=n;
+  const talk=!!(N&&!N.done&&(!N.tts||N.heard)),point=talk&&aval(A,'aa')>.5&&aval(A,'ax')>100;// นกแก้วกางปีกชี้ เมื่อกำลังเล่าและลูกศรชี้ไปข้างหน้า
+  const{st,ph}=paint(t,S,L,A,{off,walk:w,cheer:cheer>Date.now(),sad:sad>Date.now(),talk,point});
+  if(w&&ph<.08&&n-lastStep>250){lastStep=n;sfx('step')}if(!w&&G.arr!==G.lvl){G.arr=G.lvl;sfx('chime')}// เสียงเท้าตอนเดิน, กริ๊งเมื่อมาถึง
+  // กล้อง: ตัดส่วนของภาพ 240×135 แล้วขยายแบบพิกเซลคม ๆ ลงจอจริง
+  const z=Math.max(1,aval(A,'z')),sw=240/z,sh=135/z,x0=cl(aval(A,'cx')-sw/2,0,240-sw),y0=cl(aval(A,'cy')-sh/2,0,135-sh),s=Wd/sw,P=(x,y)=>[(x-x0)*s,(y-y0)*s];
+  o.imageSmoothingEnabled=false;o.drawImage(FR,x0,y0,sw,sh,0,0,Wd,Hd);
+  const bb=aval(A,'bb');if(st.b&&bb>.01){const [X,Y]=P(st.b[0],st.b[1]);bubble(o,X,Y,s,st.b[2],Math.min(1,bb),st.b[3])}
+  const aa=aval(A,'aa');if(aa>.02){const [X,Y]=P(aval(A,'ax'),aval(A,'ay')+Math.sin(clk()/380)*2-2);arrow(o,X,Y,s,Math.min(1,aa))}
+  raf=requestAnimationFrame(f)};raf=requestAnimationFrame(f)}
+// ---- status / profile ----
+const MN={vowel:'ลากเสียง',sentence:'อ่านประโยค',word:'อ่านคำ'};
+const av=(a,f)=>{const v=a.map(f).filter(x=>x!=null&&!isNaN(x));return v.length?v.reduce((p,q)=>p+q,0)/v.length:null},fx=(v,d=1)=>v==null?'–':v.toFixed(d);
+const wk=t=>{const d=new Date(t);d.setHours(0,0,0,0);d.setDate(d.getDate()-((d.getDay()+6)%7));return d.getTime()},dd=t=>new Date(t).toLocaleDateString('th-TH',{day:'numeric',month:'short'});
+const MAIN={vowel:[x=>x.sec,'ลากเสียง (วิ)'],word:[x=>x.sim,'ความตรง (%)'],sentence:[x=>x.sim,'ความตรง (%)']};
+function spark(a,f,title,unit){const p=a.map(x=>({v:f(x),x})).filter(q=>q.v!=null&&!isNaN(q.v));if(p.length<2)return`<div class="mut" style="margin:6px 0">${title}: ข้อมูลยังไม่พอ</div>`;
+ const W=300,H=80,mn=Math.min(...p.map(q=>q.v)),mx=Math.max(...p.map(q=>q.v)),rg=(mx-mn)||1,X=i=>8+i*(W-16)/(p.length-1),Y=v=>H-8-(v-mn)/rg*(H-16);
+ return`<div style="margin:8px 0"><b>${title}</b> <span class="mut">ล่าสุด ${fx(p[p.length-1].v)} ${unit} · ดีที่สุด ${fx(mx)}</span><svg viewBox="0 0 ${W} ${H}" style="width:100%;background:var(--bg);border-radius:12px"><polyline fill="none" stroke="var(--pri)" stroke-width="2" points="${p.map((q,i)=>X(i)+','+Y(q.v)).join(' ')}"/>${p.map((q,i)=>`<circle cx="${X(i)}" cy="${Y(q.v)}" r="4" fill="${q.x.skip?'#ffa800':q.x.pass?'#1b9e5a':'#d9534f'}"/>`).join('')}</svg></div>`}
+function wkTable(a,k){const [f,lb]=MAIN[k],ws=[...new Set(a.map(x=>wk(x.t)))].sort();
+ const rows=ws.map(w=>{const g=a.filter(x=>wk(x.t)==w);return{w,n:g.length,p:g.filter(x=>x.pass).length,fl:g.filter(x=>x.skip).length,m:av(g,f),d:av(g,x=>x.db),s:k=='vowel'?av(g,x=>x.semis):null}});
+ let h=`<div class="wrap"><table><tr><th>สัปดาห์</th><th>ครั้ง</th><th>ผ่าน</th><th>⚑</th><th>${lb}</th><th>ดัง (dB)</th>${k=='vowel'?'<th>ช่วงเสียง</th>':''}</tr>${rows.map(r=>`<tr><td>${dd(r.w)}</td><td>${r.n}</td><td>${r.p}</td><td>${r.fl}</td><td>${fx(r.m)}</td><td>${fx(r.d)}</td>${k=='vowel'?'<td>'+fx(r.s)+'</td>':''}</tr>`).join('')}</table></div>`;
+ if(rows.length>1){const y=rows[rows.length-1],z=rows[rows.length-2],c=(u,v,n)=>v==null||u==null?'':`<span class="${v-u>=0?'up':'down'}">${v-u>=0?'▲':'▼'} ${Math.abs(v-u).toFixed(1)}</span> ${n}`;h+=`<p class="mut">สัปดาห์ล่าสุดเทียบสัปดาห์ก่อน: ${c(z.m,y.m,lb)} · ${c(z.d,y.d,'dB')}</p>`}
+ return h}
+function trs(a){return a.slice().reverse().slice(0,60).map(x=>`<tr><td>${dd(x.t)} ${new Date(x.t).toLocaleTimeString('th-TH',{hour:'2-digit',minute:'2-digit'})}</td><td>${MN[x.mode]}</td><td>${x.lvl+1}/${x.try}</td><td>${x.skip?'⚑':x.pass?'✔':'✖'}</td><td>${x.m}</td><td>${fx(x.sec)}</td><td>${fx(x.db)}</td><td>${fx(x.semis)}</td><td>${x.sim==null?'–':x.sim}</td><td>${x.d??'–'}</td></tr>`).join('')}
+const TH='<tr><th>เวลา</th><th>โหมด</th><th>ด่าน/ครั้ง</th><th>ผล</th><th>AI</th><th>วิ</th><th>dB</th><th>เซมิ</th><th>%คำ</th><th>ระดับ</th></tr>';
+function stats(){
+ const L=rd(LK,[]);if(!L.length){app.innerHTML='<div class="card"><h2>📊 รายงาน</h2><p class="mut">ยังไม่มีข้อมูล ลองเล่นเกมสักครั้งนะ</p></div>';return}
+ let h=`<div class="card"><h2>📊 รายงานความก้าวหน้า</h2><p class="mut">ลองทั้งหมด ${L.length} ครั้ง · ผ่าน ${L.filter(x=>x.pass).length} · ⚑ ยังไม่ถึงเป้า ${L.filter(x=>x.skip).length} ด่าน · แต้ม ${rd(PK,0)}<br>สีจุด: 🟢 ผ่าน 🔴 ยังไม่ผ่าน 🟠 ครบ 3 ครั้งยังไม่ถึงเป้า (ข้ามไปด่านต่อ)</p><div class="row" style="justify-content:flex-start;flex-wrap:wrap"><button onclick="csv()">⬇️ CSV</button><button class="alt" onclick="rpt()">⬇️ รายงานสรุป</button></div></div>`;
+ for(const k of Object.keys(MODES)){const a=L.filter(x=>x.mode==k);if(!a.length)continue;
+  h+=`<div class="card"><h2>${MN[k]}</h2>${k=='vowel'?spark(a,x=>x.sec,'เวลาลากเสียง','วิ')+spark(a,x=>x.db,'ความดัง เทียบครั้งแรก','dB')+spark(a,x=>x.semis,'ช่วงเสียง','เซมิโทน'):spark(a,x=>x.sim,'ความตรงของคำ','%')+spark(a,x=>x.db,'ความดัง','dB')}<b>สรุปรายสัปดาห์</b>${wkTable(a,k)}</div>`}
+ app.innerHTML=h+`<div class="card"><b>ทุกครั้งที่ลอง (60 ครั้งล่าสุด รวมครั้งที่พลาด)</b><div class="wrap"><table>${TH}${trs(L)}</table></div></div>`}
+function prof(){app.innerHTML=`<div class="card cen"><div style="font-size:56px">🧑</div><h2>คุณทินภัทร</h2><p class="mut">แต้มสะสม ${rd(PK,0)}</p><p><button class="hb sxb" onclick="sfxToggle()">${sxLabel()}</button></p><button onclick="csv()">⬇️ ดาวน์โหลดผล (CSV)</button> <button class="alt" onclick="if(confirm('ลบข้อมูลทั้งหมด?')){wr(LK,[]);wr(PK,0);try{localStorage.removeItem('resona_base')}catch(e){}prof()}">ล้างข้อมูล</button></div>${sttCard()}`}
+function sttCard(){return`<div class="card"><h3 style="margin:0 0 6px">🎧 ตัวถอดคำพูด</h3>
+ <p style="margin:0">${STTON?'✅ ใช้ตัวถอดคำจากเซิร์ฟเวอร์: '+STTON.map(k=>STT[k]?STT[k].n:k).join(' → '):'ใช้ตัวฟังของเบราว์เซอร์ (เซิร์ฟเวอร์ยังไม่ได้ตั้งคีย์)'}</p>
+ <p style="margin:6px 0 0">${TTSV?'🗣 เสียงนก: Gemini (เสียง '+esc(TTSV)+')':'🗣 เสียงนก: เสียงของเบราว์เซอร์ (เซิร์ฟเวอร์ยังไม่ได้ตั้ง GEMINI_API_KEY)'}</p>
+ <p class="mut" style="font-size:15px">คีย์อยู่บนเซิร์ฟเวอร์ ไม่อยู่ในเบราว์เซอร์ · เสียงตอนอ่านคำ/ประโยคถูกส่งไปถอดคำที่ผู้ให้บริการ ถ้าใช้ไม่ได้จะกลับไปใช้ตัวฟังของเบราว์เซอร์</p></div>`}
+async function save(name,data){try{const d=await claude.use('downloads');if(d)await d.save({filename:name,data})}catch(e){}}
+function csv(){const L=rd(LK,[]);save('resona_attempts.csv','\ufeffdate,mode,level,try,result,ai_score,sustain_sec,loud_delta_db,pitch_range_semitone,word_accuracy,voice_stability,quest,flag_not_reached,stt_engine,word_accuracy_browser\n'+L.map(x=>[new Date(x.t).toISOString(),x.mode,x.lvl+1,x.try,x.skip?'not_reached':x.pass?'pass':'retry',x.m,x.sec,x.db,x.semis??'',x.sim??'',x.stab??'',x.q??'',x.skip?1:0,x.eng??'',x.simB??''].join(',')).join('\n'))}
+function rpt(){const L=rd(LK,[]);let b=`<h1>รายงานการฝึกพูด Resona (LSVT LOUD)</h1><p>ผู้ใช้: คุณทินภัทร · วันที่ออกรายงาน ${new Date().toLocaleDateString('th-TH')}<br>ลองทั้งหมด ${L.length} ครั้ง · ผ่าน ${L.filter(x=>x.pass).length} · ⚑ ยังไม่ถึงเป้า ${L.filter(x=>x.skip).length} ด่าน</p>`;
+ for(const k of Object.keys(MODES)){const a=L.filter(x=>x.mode==k);if(a.length)b+=`<h2>${MN[k]}</h2>${wkTable(a,k)}`}
+ b+=`<h2>ทุกครั้งที่ลอง</h2><table>${TH}${trs(L)}</table><p style="color:#666;font-size:12px">หมายเหตุ: ค่า dB เป็นค่าสัมพัทธ์เทียบครั้งแรกของผู้ใช้ (ไม่ใช่ dB SPL) ผลจากเกมเป็นข้อมูลประกอบการติดตามเท่านั้น ไม่ใช่การวินิจฉัย ⚑ = ลองครบ 3 ครั้งแล้วยังไม่ถึงเป้า</p>`;
+ save('resona_report.html',`<!doctype html><meta charset="utf-8"><title>Resona report</title><style>body{font-family:sans-serif;margin:24px}table{border-collapse:collapse;font-size:13px}td,th{border:1px solid #bbb;padding:4px 8px;text-align:center}</style>${b}`)}
+tab(0);
+</script></body></html>

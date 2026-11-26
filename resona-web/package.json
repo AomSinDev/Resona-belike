@@ -1,0 +1,12 @@
+{
+  "name": "resona-web",
+  "private": true,
+  "description": "Resona speech-rehab travel game (prototype) with a server-side speech-to-text proxy",
+  "scripts": {
+    "start": "node --env-file-if-exists=.env.local server.js",
+    "test": "node test/stt.test.js && node test/story.test.js && node test/tts.test.js"
+  },
+  "engines": {
+    "node": ">=22.9"
+  }
+}
